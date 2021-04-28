@@ -1,0 +1,113 @@
+<DOCTYPE html>
+<html>
+<head>
+    <meta charset='UTF-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=0'>
+    <style type='text/css' >
+        .inp{
+            margin-top: 20px !important;
+        }
+        i.inp{
+            font-size: 35px !important;
+            margin-top: 25px !important;
+        }
+        input.inp{
+            text-indent: 20px;
+        }
+        
+    </style>
+</head>
+<body>
+    <header>
+    </header>
+    <div id='Container-Sales' class='container row valign-wrapper' style='width: 90%;' >
+        <div class='col s12 card-panel' >
+            <h5 class='col s7 offset-s4 card-title blue-text' style='margin-top: 25px; margin-bottom: 30px;' >Show Sales</h5>
+            <div class='row'>
+                <form class='col s12'>
+                    <div class='row' >
+                        <div class='input-field col s2' style='margin-left: 25px;' >
+                          <select>
+                            <option value='1' selected>All</option>
+                            <option value='2'>Register</option>
+                            <option value='3'>Cancel</option>
+                          </select>
+                          <label>Status</label>
+                        </div>
+                        <div class='input-field col s3' style='margin-left: 30px;' >
+                            <input id='show-Sales_dateOpt' type='text' class='datepicker'>
+                            <label for="show-Sales_dateOpt" class="active">Date</label>
+                        </div>
+                        <table class='col s10 offset-s1 striped' >
+                            <thead>
+                              <tr>
+                                  <th>Client CI</th>
+                                  <th>Total</th>
+                                  <th>Date</th>
+                                  <th>Status</th>
+                              </tr>
+                            </thead>
+
+                            <tbody>
+                              <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                              </tr>
+                              <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                              </tr>
+                              <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                              </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+<footer>
+<script type='text/javascript' >
+    $(document).ready(function() {
+        $('select').material_select();
+    });
+    $('.datepicker').pickadate({
+        selectMonths: true, // Creates a dropdown to control month
+        selectYears: 5, // Creates a dropdown of 15 years to control year,
+        today: 'Today',
+        clear: 'Clear',
+        close: 'Ok',
+        closeOnSelect: false, // Close upon selecting a date,
+        setDefaultDate: true
+    });
+    $('.modal').modal({
+        dismissible: true, // Modal can be dismissed by clicking outside of the modal
+        opacity: 0, // Opacity of modal background
+        inDuration: 300, // Transition in duration
+        outDuration: 200, // Transition out duration
+        startingTop: '4%', // Starting top style attribute
+        endingTop: '10%', // Ending top style attribute
+        ready: function(modal, trigger) { // Callback for Modal open. Modal and trigger parameters available.
+          //empty
+        },
+        complete: function() {
+            //empty
+         } // Callback for Modal close
+      }
+    );
+    $('#register-Sales_AddClient').click(function(){
+        $('#add_Client').modal('open');
+    });
+</script>
+    
+</footer>
+</html>

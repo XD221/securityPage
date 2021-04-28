@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset='UTF-8'>
+        <meta name='viewport' content='width=device-width, initial-scale=0'>
+        <link rel='stylesheet' href='{{ url_for('static', filename='css/materialize.css') }}' >
+        <link rel='stylesheet' href='{{ url_for('static', filename='css/materialize.min.css') }}' >
+        <link href='https://fonts.googleapis.com/icon?family=Material+Icons' rel='stylesheet' >
+        <title>Home</title>
+        <style type='text/css'>
+            html{
+                background: black url('{{ url_for('static', filename='img/background.jpg') }}') no-repeat center center fixed;
+                -webkit-background-size: cover;
+                -moz-background-size: cover;
+                -o-background-size: cover;
+                background-size: cover;
+                filter: brightness(0.9);
+            }
+            i.i-opt{
+                font-size: 32px !important;
+                margin-top: 5px;
+                margin-right: 15px !important;
+            }
+            a{
+                color: #0f5cbf !important;
+                box-shadow: none !important;
+                padding-bottom: 50px !important;
+            }
+            .opt{
+                padding: 5px !important;
+                font-size: 20px;
+            }
+            .opt h6{
+                line-height: 30px;
+            }
+            .opt:hover{
+                background-color: white;
+                opacity: 0.5;
+                border: 0;
+            }
+        </style>
+    </head>
+    <body class='' style='min-width: 641px; min-height: 970px;' >
+        <header>
+        </header>
+        <div style='display: flex;'>
+        <div class='valign-wrapper' style='width: 30% !important; height: 100vh !important;'>
+            <div id='menu-home' class='row black' style='padding: 30px; opacity: 0.7;'>
+                <div id='home-opt01' class='opt col s12'>
+                    <a class='col s12 btn tooltipped transparent' data-position='right' data-delay='50' data-tooltip='Select' href='#' >
+                        <i class='i-opt col s1 material-icons prefix'>event_available</i>
+                        <h6 class='col s10 left-align'>Register Sales</h6>
+                    </a>
+                </div>
+                <div id='home-opt02' class='opt col s12'>
+                    <a class='col s12 btn tooltipped transparent' data-position='right' data-delay='50' data-tooltip='Select' href='#' >
+                        <i class='i-opt col s1 material-icons prefix'>format_list_bulleted</i>
+                        <h6 class='col s10 left-align'>Show Sales</h6>
+                    </a>
+                </div>
+                <div class='opt col s12'>
+                    <a class='col s12 btn tooltipped transparent' data-position='right' data-delay='50' data-tooltip='Select' href='#' >
+                        <i class='i-opt col s1 material-icons prefix'>book</i>
+                        <h6 class='col s10 left-align'>Register Inventory</h6>
+                    </a>
+                </div>
+                <div class='opt col s12'>
+                    <a class='col s12 btn tooltipped transparent' data-position='right' data-delay='50' data-tooltip='Select' href='#' >
+                        <i class='i-opt col s1 material-icons prefix'>subject</i>
+                        <h6 class='col s10 left-align'>Show Inventory</h6>
+                    </a>
+                </div>
+                <div class='opt col s12'>
+                    <a class='col s12 btn tooltipped transparent' data-position='right' data-delay='50' data-tooltip='Select' href='#' >
+                        <i class='i-opt col s1 material-icons prefix'>account_circle</i>
+                        <h6 class='col s10 left-align'>Show Warranty</h6>
+                    </a>
+                </div>
+                <div class='opt col s12'>
+                    <a class='col s12 btn tooltipped transparent' data-position='right' data-delay='50' data-tooltip='Select' href='#' >
+                        <i class='i-opt col s1 material-icons prefix'>account_circle</i>
+                        <h6 class='col s10 left-align'>Profile</h6>
+                    </a>
+                </div>
+                <!--<div class='opt col s12'> -->
+                <!--    <a class='col s12 btn tooltipped transparent' data-position='right' data-delay='50' data-tooltip='Select' href='#' > -->
+                <!--        <i class='i-opt col s1 material-icons prefix'>account_circle</i> -->
+                <!--        <h6 class='col s10 left-align'>Profile</h6> -->
+                <!--    </a> -->
+                <!--</div> -->
+                <!--<div class='opt col s12'> -->
+                <!--    <a class='col s12 btn tooltipped transparent' data-position='right' data-delay='50' data-tooltip='Select' href='#' > -->
+                <!--        <i class='i-opt col s1 material-icons prefix'>account_circle</i> -->
+                <!--        <h6 class='col s10 left-align'>Profile</h6> -->
+                <!--    </a> -->
+                <!--</div> -->
+            </div>
+        </div>
+        <div class='valign-wrapper' style='height: 97vh; flex-grow: 1; justify-content: center' >
+            <div id='another-body' class='' style='height: 90%; width: 90%; opacity: 0.8;' ></div>
+        </div>
+        </div>
+    </body>
+    <footer>
+        <script type='text/javascript' src="{{ url_for('static', filename='js/jquery-3.5.1.js') }}" ></script>
+        <script type='text/javascript' src="{{ url_for('static', filename='js/jquery-3.5.1.min.js') }}" ></script>
+        <script type='text/javascript' src="{{ url_for('static', filename='js/materialize.js') }}" ></script>
+        <script type='text/javascript' src="{{ url_for('static', filename='js/materialize.min.js') }}"   ></script>
+        <script type='text/javascript' >
+            $var_opt = 0
+            $(document).ready(function(){
+                //empty
+            });
+
+            $('#home-opt01').click(function(){
+                if($var_opt != 1){
+                    $('#another-body').load('restricted/register_Sales');
+                    $var_opt = 1
+                }else{
+                    $('#another-body').empty();
+                    $var_opt = 0
+                }
+            });
+            $('#home-opt02').click(function(){
+                if($var_opt != 2){
+                    $('#another-body').load('restricted/show_Sales');
+                    $var_opt = 2
+                }else{
+                    $('#another-body').empty(); 
+                    $var_opt = 0
+                }
+            });
+        </script>
+    </footer>
+</html>
