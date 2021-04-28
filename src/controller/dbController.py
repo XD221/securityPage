@@ -49,7 +49,7 @@ empleado_schema_multiple = EmpleadoSchema(many=True)
 class Empleado(mysql.Model):
     ID = mysql.Column(mysql.Integer, primary_key=True)
     estado = mysql.Column(mysql.Integer, nullable=False)
-    id_persona = mysql.Column(mysql.Integer, mysql.ForeignKey('persona.id'), nullable=False)
+    id_persona = mysql.Column(mysql.Integer, mysql.ForeignKey('persona.ID'), nullable=False)
     
     def __init__(self, estado, id_persona):
         self.estado = estado
@@ -75,7 +75,7 @@ class Cuenta(mysql.Model):
     urs_Password = mysql.Column(mysql.String(256), nullable=False)
     urs_Llave = mysql.Column(mysql.String(30), nullable=False)
     estado = mysql.Column(mysql.Integer, nullable=False)
-    id_Empleado = mysql.Column(mysql.Integer, mysql.ForeignKey('empleado.id'), nullable=False)
+    id_Empleado = mysql.Column(mysql.Integer, mysql.ForeignKey('empleado.ID'), nullable=False)
     
     def __init__(self, nombre_Cuenta, urs_Password, urs_Llave, estado, id_Empleado):
         self.nombre_Cuenta = nombre_Cuenta
@@ -102,7 +102,7 @@ class Cliente(mysql.Model):
     ID = mysql.Column(mysql.Integer, primary_key=True)
     NIT = mysql.Column(mysql.Integer)
     razon_Social = mysql.Column(mysql.String(45))
-    id_Persona = mysql.Column(mysql.Integer, mysql.ForeignKey('persona.id'), nullable=False)
+    id_Persona = mysql.Column(mysql.Integer, mysql.ForeignKey('persona.ID'), nullable=False)
     
     def __init__(self, NIT, razon_Social, id_Persona):
         self.NIT = NIT
@@ -126,7 +126,7 @@ tecnico_schema_multiple = TecnicoSchema(many=True)
 class Tecnico(mysql.Model):
     ID = mysql.Column(mysql.Integer, primary_key=True)
     direccion = mysql.Column(mysql.String(125), nullable=False)
-    id_Persona = mysql.Column(mysql.Integer, mysql.ForeignKey('persona.id'), nullable=False)
+    id_Persona = mysql.Column(mysql.Integer, mysql.ForeignKey('persona.ID'), nullable=False)
     
     def __init__(self, direccion, id_Persona):
         self.direccion = direccion
@@ -155,7 +155,7 @@ class Producto(mysql.Model):
     precio_SinFactura = mysql.Column(mysql.Numeric(6,2), nullable=False)
     precio_ConFactura = mysql.Column(mysql.Numeric(6,2), nullable=False)
     precio_Tecnico = mysql.Column(mysql.Numeric(6,2), nullable=False)
-    id_Tecnico = mysql.Column(mysql.Integer, mysql.ForeignKey('tecnico.id'))
+    id_Tecnico = mysql.Column(mysql.Integer, mysql.ForeignKey('tecnico.ID'))
 
 #---------------------------------
 
@@ -172,10 +172,10 @@ class Garantia(mysql.Model):
     ID = mysql.Column(mysql.Integer, primary_key=True)
     COD_Fabrica_Producto = mysql.Column(mysql.String(45), nullable=False)
     fecha_Registro = mysql.Column(mysql.Date(), nullable=False)
-    meses_Valido = mysql.Column(mysql.Integer, mullable=False)
+    meses_Valido = mysql.Column(mysql.Integer, nullable=False)
     descripcion = mysql.Column(mysql.String(50), nullable=False)
     estado = mysql.Column(mysql.Integer, nullable=False)
-    id_Producto = mysql.Column(mysql.Integer, mysql.ForeignKey('producto.id'), nullable=False)
+    id_Producto = mysql.Column(mysql.Integer, mysql.ForeignKey('producto.ID'), nullable=False)
     
     def __init__(self, COD_Fabrica_Producto, fecha_Registro, meses_Valido, descripcion, estado, id_Producto):
         self.COD_Fabrica_Producto = COD_Fabrica_Producto
@@ -202,8 +202,8 @@ producto_devuelto_schema_multiple = Producto_DevueltoSchema(many=True)
 class Producto_Devuelto(mysql.Model):
     ID = mysql.Column(mysql.Integer, primary_key=True)
     descripcion = mysql.Column(mysql.String(60), nullable=False)
-    id_Garantia = mysql.Column(mysql.Integer, mysql.ForeignKey('garantia.id'), nullable=False)
-    id_Producto = mysql.Column(mysql.Integer, mysql.ForeignKey('producto.id'), nullable=False)
+    id_Garantia = mysql.Column(mysql.Integer, mysql.ForeignKey('garantia.ID'), nullable=False)
+    id_Producto = mysql.Column(mysql.Integer, mysql.ForeignKey('producto.ID'), nullable=False)
     
     def __init__(self, ID, descripcion, id_Garantia, id_Producto):
         self.ID = ID
@@ -229,9 +229,9 @@ class Venta(mysql.Model):
     ID = mysql.Column(mysql.Integer, primary_key=True)
     total = mysql.Column(mysql.Numeric(6,2), nullable=False)
     estado = mysql.Column(mysql.Integer, nullable=False)
-    id_Cliente = mysql.Column(mysql.Integer, mysql.ForeignKey('cliente.id'),nullable=False)
-    id_Empleado = mysql.Column(mysql.Integer, mysql.ForeignKey('empleado.id'),nullable=False)
-    id_Producto = mysql.Column(mysql.Integer, mysql.ForeignKey('producto.id'), nullable=False)
+    id_Cliente = mysql.Column(mysql.Integer, mysql.ForeignKey('cliente.ID'),nullable=False)
+    id_Empleado = mysql.Column(mysql.Integer, mysql.ForeignKey('empleado.ID'),nullable=False)
+    id_Producto = mysql.Column(mysql.Integer, mysql.ForeignKey('producto.ID'), nullable=False)
     
     def __init__(self, total, estado, id_Cliente, id_Empleado, id_Producto):
         self.total = total
@@ -258,8 +258,8 @@ class Producto_Vendido(mysql.Model):
     ID = mysql.Column(mysql.Integer, primary_key=True)
     cantidad = mysql.Column(mysql.Integer, nullable=True)
     total = mysql.Column(mysql.Numeric(6,2), nullable=True)
-    id_Producto = mysql.Column(mysql.Integer, mysql.ForeignKey('producto.id'), nullable=False)
-    id_Venta = mysql.Column(mysql.Integer, mysql.ForeignKey('venta.id', nullable=False))
+    id_Producto = mysql.Column(mysql.Integer, mysql.ForeignKey('producto.ID'), nullable=False)
+    id_Venta = mysql.Column(mysql.Integer, mysql.ForeignKey('venta.ID'), nullable=False)
     
     def __init__(self, cantidad, total, id_Producto, id_Venta):
         self.cantidad = cantidad
@@ -306,8 +306,8 @@ inventario_schema_multiple = InventarioSchema(many=True)
 
 class Inventario(mysql.Model):
     cantidad = mysql.Column(mysql.Integer, nullable = False)
-    id_Sucursal = mysql.Column(mysql.Integer, mysql.ForeignKey('sucursal.id'), primary_key=True)
-    id_Producto = mysql.Column(mysql.Integer, mysql.ForeignKey('producto.id'), primary_key=True)
+    id_Sucursal = mysql.Column(mysql.Integer, mysql.ForeignKey('sucursal.ID'), primary_key=True)
+    id_Producto = mysql.Column(mysql.Integer, mysql.ForeignKey('producto.ID'), primary_key=True)
     
     def __init__(self, cantidad, id_Sucursal, id_Producto):
         self.cantidad = cantidad
@@ -353,8 +353,8 @@ permiso_asignado_schema_multiple = Permiso_AsignadoSchema(many=True)
 
 class Permiso_Asignado(mysql.Model):
     estado = mysql.Column(mysql.Integer, nullable=False)
-    id_Permiso = mysql.Column(mysql.Integer, mysql.ForeignKey('permiso.id'), primary_key=True)
-    id_Cuenta = mysql.Column(mysql.Integer, mysql.ForeignKey('cuenta.id'), primary_key=True)
+    id_Permiso = mysql.Column(mysql.Integer, mysql.ForeignKey('permiso.ID'), primary_key=True)
+    id_Cuenta = mysql.Column(mysql.Integer, mysql.ForeignKey('cuenta.ID'), primary_key=True)
     
     def __init__(self, estado, id_Permiso, id_Cuenta):
         self.estado = estado
