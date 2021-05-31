@@ -1,0 +1,75 @@
+<style type='text/css' >
+    html{
+        background: black url('{{ url_for('static', filename='img/background.jpg') }}') no-repeat center center fixed;
+        -webkit-background-size: cover;
+        -moz-background-size: cover;
+        -o-background-size: cover;
+        background-size: cover;
+        filter: brightness(0.9);
+    }
+    body{
+        min-width: 641px;
+        min-height: 970px;
+    }
+    header{
+        position: absolute;
+        right: 100px;
+    }
+    i.i-opt{
+        font-size: 32px !important;
+        margin-top: 5px;
+        margin-right: 15px !important;
+    }
+    a{
+        color: #0f5cbf !important; /*white*/
+        box-shadow: none !important;
+        padding-bottom: 50px !important;
+    }
+    input[type=text], input[type=number]{
+        text-indent: 10px;
+    }
+    .opt{
+        padding: 5px !important;
+        font-size: 20px;
+    }
+    .opt h6{
+        line-height: 30px;
+    }
+    .opt:hover{
+        background-color: white;
+        opacity: 0.5;
+        border: 0;
+    }
+    .dropdown-content#dropdown-profile {
+        top: 70% !important;
+        opacity: 0.8 !important;
+        background-color: black;
+    }
+    .dropdown-content#dropdown-setBrightness {
+        top: 90px !important;
+        opacity: 0.8 !important;
+        background-color: black;
+    }
+    .dropdown-content#dropdown-setBrightness span{
+        color: white;
+    }
+    .dropdown-content#dropdown-profile a{
+        padding-bottom: 0 !important ;
+        color: white !important;
+    }
+    .btn{
+        padding: 0 1.3rem;
+    }
+    #i-profile{
+        height: 40px;
+        background: url('{{url_picture}}') no-repeat;
+        background-size: 100% 100%;
+    }
+    .dropdown-content#dropdown-setBrightness li:hover, .dropdown-content#dropdown-setBrightness li.active, .dropdown-content#dropdown-setBrightness li.selected{
+        background-color: transparent;
+    }
+    th, td {
+        text-align:center;
+        margin-bottom: 10px;
+    }
+</style>

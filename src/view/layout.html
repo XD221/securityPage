@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<head>
+    {% include "component/head.html" %}
+    <title>{% block title %}{% endblock %}</title>
+    {% block head %}
+    {% endblock %}
+</head>
+<body style='min-width: 641px; min-height: 970px;' >
+    {% block content %}
+        
+    {% endblock %}
+</body>
+<footer>
+    {% include "component/footer.html" %}
+    {% block footer %}
+    {% endblock %}
+</footer>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset='UTF-8'>
+        <meta name='viewport' content='width=device-width, initial-scale=0'>
+    </head>
+    <body>
+        <header>
+        </header>
+        <div class='col s12 card-panel' >
+            <h5 class='col s7 offset-s4 card-title blue-text' style="margin-top: 25px; margin-bottom: 20px;" >Register Brand</h5>
+            <div class="row">
+                <form id='nc-form' class="col s12" method="POST" action="/request/cliente" >
+                    <div class="row">
+                        <div class="input-field col s3 offset-s1">
+                            <input placeholder="None" id="name_field" name='name_field' type="number" class="inp validate white-text blue accent-2" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" min="0" maxlength="14" required >
+                            <label for="ci_field">Name</label>
+                        </div>
+                        <button id='nc-submit' class="col s9 offset-s1 btn grey lighten-2 light-blue-text" type="submit" name="action" style="margin-top: 20px;" >CONFIRM</button>
+                    </div>
+                </form>
+            </div>
+    </body>
+    <footer>
+        <script type="text/javascript" >
+            $('#name_field, #fLast_field, #mLast_field').keydown(function (e) {
+                    var key = e.keyCode;
+                    if (e.ctrlKey || e.altKey) {
+                        e.preventDefault();
+                    } else {
+                        if (!((key == 8) || (key == 32) || (key == 46) || (key >= 35 && key <= 40) || (key >= 65 && key <= 90))) {
+                            e.preventDefault();
+                        }
+                    }
+                });
+
+                $("#name_field, #fLast_field, #mLast_field").keypress(function(e) {
+                    var key = e.keyCode;
+                    if (e.shiftKey){
+                        if (!((key >= 65 && key <= 90)))  {   
+                            e.preventDefault();
+                            return;
+                        }
+                    }else{
+                        if (!((key >= 97 && key <= 122)))  { 
+                            e.preventDefault();
+                        return;
+                        }
+                    }
+                });
+        </script>
+    </footer>
+</html>

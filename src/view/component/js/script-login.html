@@ -1,0 +1,12 @@
+<script type='text/javascript' >
+    $(window).keydown(function(e) {
+        switch (e.keyCode){
+            case 13:
+                $('#form_login').submit();
+                break;
+        }
+    });
+    $('#log_submit').click(function(){
+        $('#form_login').submit();
+    });
+</script>

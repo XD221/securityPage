@@ -1,0 +1,88 @@
+<script type='text/javascript'>
+    $(document).ready(function() {
+        var dat = new Date();
+        
+        $('select').material_select();
+        $('.datepicker').pickadate({
+            selectMonths: true, // Creates a dropdown to control month
+            selectYears: 100,
+            min: new Date(dat.getFullYear() - 100, 0, 1),
+            max: new Date(dat.getFullYear(), dat.getMonth(), dat.getDay),
+            //selectYears: 15, // Creates a dropdown of 15 years to control year,
+            today: 'Today',
+            clear: 'Clear',
+            close: 'Ok',
+            format: 'yyyy-mm-dd',
+            closeOnSelect: false, // Close upon selecting a date,
+            container: undefined, // ex. 'body' will append picker to body
+        });
+
+        $('#ci_field, #pNumber_field, #nit_field').keydown(function (e) {
+            if (e.keyCode == 109 || e.keyCode == 107) {
+                e.preventDefault();
+                return false;
+            }
+        });
+
+        $('#ci_field, #pNumber_field, #nit_field').keypress(function (e) {
+            var key = e.keyCode;
+            if (key == 101 || key == 46 || key == 43 || key == 45){
+                e.preventDefault();
+                return false;
+            }
+        });
+        
+        $('#name_field, #fLast_field, #mLast_field').keydown(function (e) {
+            var key = e.keyCode;
+            if (e.ctrlKey || e.altKey) {
+                e.preventDefault();
+            } else {
+                if (!((key == 8) || (key == 32) || (key == 46) || (key >= 35 && key <= 40) || (key >= 65 && key <= 90))) {
+                    e.preventDefault();
+                }
+            }
+        });
+
+        $("#name_field, #fLast_field, #mLast_field").keypress(function(e) {
+            var key = e.keyCode;
+            if (e.shiftKey){
+                if (!((key >= 65 && key <= 90)))  {   
+                    e.preventDefault();
+                    return;
+                }
+            }else{
+                if (!((key >= 97 && key <= 122)))  { 
+                    e.preventDefault();
+                return;
+                }
+            }
+        });
+
+        $('#email_field').keydown(function (e) {
+            var key = e.keyCode;
+            if (e.ctrlKey || e.altKey) {
+                e.preventDefault();
+            } else {
+                if (!((key == 8) || (key == 32) || (key == 46) || (key >= 35 && key <= 40) || (key >= 65 && key <= 90) || key == 190 || key == 189 || (key >= 48 && key <= 57))) {
+                    e.preventDefault();
+                }
+            }
+        });
+
+        $("#email_field").keypress(function(e) {
+            var key = e.keyCode;
+            if (e.shiftKey){
+                if (!((key >= 65 && key <= 90) || key == 64 || key == 95))  {   
+                    e.preventDefault();
+                    return;
+                }
+            }else{
+                if (!((key >= 97 && key <= 122) || (key >= 48 && key <= 57) || key == 46))  {
+                    e.preventDefault();
+                return;
+                }
+            }
+        });
+
+    });
+</script>

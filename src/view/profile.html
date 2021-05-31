@@ -1,0 +1,54 @@
+{% extends "layout.html" %}
+{% block title %}Home{% endblock %}
+{% block head %}
+    {% include "component/css/css-profile.html" %}
+{% endblock %}
+{% block content %}
+<div id="Container-profile" class='container row valign-wrapper' style='width: 90%; margin-top: 50px !important;' >
+    <div class='col s10 offset-s1 card-panel' >
+        <h5 class='col s7 offset-s2 card-title blue-text center-align' style="margin-top: 25px; margin-bottom: 20px;" >Profile</h5>
+        <div class='col s6' >
+            <div id='card-profile' class='card blue darken-1' >
+                <div class='card-content white-text' >
+                    <span class='col s12' >Personal Information</span>
+                    <div class="col s12 divider" style='margin-top: 5px; margin-bottom: 15px;' ></div>
+                    <p id='name_field'  >Name: {{ name }}</p>
+                    <p id='fLast_field'  >Mother's Last Name: {{ fLast }}</p>
+                    <p id='mLast_field'  >Father's Last Name: {{ mLast }}</p>
+                    <p id='sex_field'  >Sex: {{ sex }}</p>
+                    <p id='pNumber_field'  >Phone Number: {{ pNumber }}</p>
+                    <p id='email_field'  >Email: {{ email }}</p>
+                    <p id='bDate_field'  >Date of Birth: {{ bDate }}</p>
+                </div>
+            </div>
+        </div>
+        <div class='col s6' >
+            <div class='card blue darken-1' >
+                <div class='card-content white-text' >
+                    <span class='col s12' >Change Your Password</span>
+                    <div class="col s12 divider" style='margin-top: 5px;' ></div>
+                    <form id='form_chPass' method="POST" action="/profile" >
+                        <p id=pr_messageErr class='red-text' style='margin-top: 45px; margin-bottom: 20px;' >{{ errMessage }}</p>
+                        <div class='input-field' >
+                            <input placeholder="None" id="oldPass_field" name='oldPass_field' type="password" class="validate white-text "  maxlength="42" >
+                            <label class='white-text' for="oldPass_field">Original Password</label>
+                        </div>
+                        <div class='input-field' >
+                            <input placeholder="None" id="newPass_field" name='newPass_field' type="password" class="validate white-text "  maxlength="42" >
+                            <label class='white-text' for="newPass_field">New Password</label>
+                        </div>
+                        <div class='input-field' >
+                            <input placeholder="None" id="confPass_field" name='confPass_field' type="password" class="validate white-text "  maxlength="42" >
+                            <label class='white-text' for="confPass_field">Confirm Password</label>
+                        </div>
+                        <button id='cp-submit' class="btn grey lighten-2 light-blue-text" type="submit" name="action" style="margin-top: 10px;" >Update Password</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block footer %}
+    {% include "component/js/script-profile.html" %}
+{% endblock %}

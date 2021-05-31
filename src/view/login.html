@@ -1,63 +1,35 @@
-<DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=0">
-    <link rel='stylesheet' href="{{ url_for('static', filename='css/materialize.css') }}" >
-    <link rel='stylesheet' href="{{ url_for('static', filename='css/materialize.min.css') }}" >
-    <link href='https://fonts.googleapis.com/icon?family=Material+Icons' rel='stylesheet' >
-    <title>Login</title>
-    <style type='text/css' >
-        body{
-            background: rgb(42,42,42);
-            background: linear-gradient(168deg, rgba(42,42,42,1) 0%, rgba(89,89,89,0.9262079831932774) 53%, rgba(42,42,42,1) 100%);
-        }
-        .card-custom{
-            background: rgb(66,66,66);
-            background: linear-gradient(176deg, rgba(25,25,25,0.757140756302521) 0%, rgba(63,63,63,0.866140756302521) 34%, rgba(68,68,68,0.689140756302521) 45%, rgba(66,66,66,0.9374124649859944) 83%, rgba(58,58,58,1) 100%);
-        }
-        .inp{
-            margin-top: 20px !important;
-        }
-        i.inp{
-            font-size: 35px !important;
-            margin-top: 25px !important;
-        }
-        input.inp{
-            text-indent: 20px;
-        }
-    </style>
-</head>
-<body>
+{% extends "layout.html" %}
+{% block title %}Login{% endblock %}
+{% block head %}
+    {% include "component/css/css-login.html" %}
+{% endblock %}
+{% block content %}
     <header>
     </header>
-    <div id="loginContainer" class='container row valign-wrapper' style='height: 90% !important;' >
+    <div id="loginContainer" class='container row valign-wrapper' style='height: 90vh !important;' >
         <div class='col s10 offset-s1 m8 offset-m2 l9 offset-l2 offset-xl3 card-panel card-custom' style="max-width: 596px;" >
             <h5 class='col s7 offset-s3 offset-m4 card-title white-text' style="margin-top: 25px; margin-bottom: 20px;" >ACCOUNT LOGIN</h5>
+            <h6 class='col s11 offset-s1 red-text' >{{err_message}}</h6>
             <div class="row">
-                <form class="col s12">
+                <form class="col s12" method="POST" action="/login" id='form_login' >
                     <div class="row">
                         <div class="input-field col s9 offset-s1">
                             <i class="inp material-icons prefix">account_circle</i>
-                            <input placeholder="Username" id="username_field" type="text" class="inp validate white-text grey darken-4">
+                            <input placeholder="Username" id="username_field" name='lg_user' type="text" class="inp validate white-text grey darken-4">
                             <label for="first_name">USERNAME</label>
                         </div>
                         <div class="input-field col s9 offset-s1">
                             <i class="inp material-icons prefix">lock_outline</i>
-                            <input placeholder="**********" id="password_field" type="password" class="inp validate white-text grey darken-4">
+                            <input placeholder="**********" id="password_field" name='lg_password' type="password" class="inp validate white-text grey darken-4">
                             <label for="first_name">PASSWORD</label>
                         </div>
-                        <a class="col s8 offset-s2 waves-effect waves-light btn grey lighten-2 black-text">LOG IN</a>
+                        <a id='log_submit' class="col s8 offset-s2 waves-effect waves-light btn grey lighten-2 black-text">LOG IN</a>
                     </div>
                 </form>
             </div>
         </div>
     </div>
-</body>
-<footer>
-<script type='text/javascript' src="{{ url_for('static', filename='js/jquery-3.5.1.js') }}" ></script>
-<script type='text/javascript' src="{{ url_for('static', filename='js/jquery-3.5.1.min.js') }}" ></script>
-<script type='text/javascript' src="{{ url_for('static', filename='js/materialize.js') }}" ></script>
-<script type='text/javascript' src="{{ url_for('static', filename='js/materialize.min.js') }}" ></script>
-</footer>
-</html>
+{% endblock %}
+{% block footer %}
+    {% include "component/js/script-login.html" %}
+{% endblock %}

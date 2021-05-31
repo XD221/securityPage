@@ -1,0 +1,36 @@
+<script type="text/javascript">
+    $('#form_chPass').submit(function(e){
+
+        if ($('#oldPass_field').val().length == 0){
+            $('#pr_messageErr').text('Fill in the Original Password field');
+            e.preventDefault();
+            return false;
+        }else if($('#oldPass_field').val().length > 0){
+            $('#pr_messageErr').text('');
+        }
+        if ($('#newPass_field').val().length == 0){
+            $('#pr_messageErr').text('Fill in the new password field');
+            e.preventDefault();
+            return false;
+        }else if($('#newPass_field').val().length > 0){
+            $('#pr_messageErr').text('');
+        }
+        if ($('#confPass_field').val().length == 0){
+            $('#pr_messageErr').text('Fill in the password confirmation field');
+            e.preventDefault();
+            return false;
+        }else if($('#confPass_field').val().length > 0){
+            $('#pr_messageErr').text('');
+        }
+        if ($('#newPass_field').val() != $('#confPass_field').val()){
+            $('#pr_messageErr').text('Password do not match');
+            e.preventDefault();
+            return false;
+        }
+        if ($('#newPass_field').val().length < 8){
+            $('#pr_messageErr').text('Invalid new Password, The Password must be at least 8 characters long');
+            e.preventDefault();
+            return false;
+        }
+    });
+</script>

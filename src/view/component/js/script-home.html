@@ -1,0 +1,62 @@
+<script type="text/javascript">
+
+    //HOME
+    //Variable
+    $var_opt = 0
+    //JQUERY
+    $('#rangeSlider-setBrightness').on('input', function(){
+        var value = $('#rangeSlider-setBrightness').val();
+        var filterVal = 'brightness(' + value + ')';
+        $('html')
+          .css('filter',filterVal)
+          .css('webkitFilter',filterVal)
+          .css('mozFilter',filterVal)
+          .css('oFilter',filterVal)
+          .css('msFilter',filterVal);
+    });
+    $('#home-opt01').click(function(){
+        if($var_opt != 1){
+            $('#another-body').load('/restricted/register_Product');
+            $var_opt = 1
+        }else{
+            $('#another-body').empty();
+            $var_opt = 0
+        }
+    });
+    $('#home-opt02').click(function(){
+        if($var_opt != 2){
+            $('#another-body').load('restricted/new_Client');
+            $var_opt = 2
+        }else{
+            $('#another-body').empty();
+            $var_opt = 0
+        }
+    });
+    $('#home-opt03').click(function(){
+        if($var_opt != 3){
+            $('#another-body').load('restricted/register_Sales');
+            $var_opt = 3
+        }else{
+            $('#another-body').empty();
+            $var_opt = 0
+        }
+    });
+    $('#home-opt04').click(function(){
+        if($var_opt != 4){
+            $('#another-body').load('restricted/show_Sales');
+            $var_opt = 4
+        }else{
+            $('#another-body').empty(); 
+            $var_opt = 0
+        }
+    });
+    $('#home-opt05').click(function(){
+        if($var_opt != 5){
+            $('#another-body').load('/restricted/register_Inventory');
+            $var_opt = 5
+        }else{
+            $('#another-body').empty(); 
+            $var_opt = 0
+        }
+    });
+</script>
