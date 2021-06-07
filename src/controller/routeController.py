@@ -68,25 +68,39 @@ def ro_pr_chPass():
         return redirect("/logout", code=302)
     return redirect("/login", code=302)
 
-@app.route('/restricted/new_Client', methods=['GET'])
-def ro_new_Client():
-    return new_Client()
+@app.route('/restricted/client', methods=['GET'])
+def ro_client():
+    return client()
     
-@app.route('/restricted/register_Sales', methods=['GET'])
-def ro_register_Sales():
-    return register_Sales()
+@app.route('/restricted/sales', methods=['GET'])
+def ro_sales():
+    return sales()
 
-@app.route('/restricted/show_Sales', methods=['GET'])
-def ro_show_Sales():
-    return show_Sales()
+@app.route('/restricted/inventory', methods=['GET'])
+def ro_inventory():
+    return inventory()
 
-@app.route('/restricted/register_Inventory', methods=['GET'])
-def ro_register_Inventory():
-    return register_Inventory()
+@app.route('/restricted/product', methods=['GET'])
+def ro_product():
+    return product()
 
-@app.route('/restricted/register_Product', methods=['GET'])
-def ro_register_Product():
-    return register_Product()
+@app.route('/variable/data', methods=['POST'])
+def var_data():
+    if isLogging():
+        req_data = request.form.get('req_data');
+        if req_data is None:
+            return "False"
+        saveData('req_data', req_data);
+        return 'True'
+    else:
+        return redirect("/login", code=302)
+
+@app.route('/variable/data', methods=['GET'])
+def var_data_get():
+    if isLogging():
+        return getData('req_data')
+    else:
+        return redirect("/login", code=302)
 
 @app.errorhandler(404)
 def page_not_found(e):
@@ -347,6 +361,33 @@ def req_get_cliente_select(number):
     res_cliente = Cliente.query.get(number)
     return cliente_schema_single.jsonify(res_cliente)
 
+@app.route('/request/cliente_var', methods=['GET'])
+def req_get_cliente_var():
+    if isLogging():
+        req_nomComp = request.args.get('fName')
+        if req_nomComp is None:
+            req_nomComp = ''
+        else:
+            req_nomComp = "%{}%".format(req_nomComp)
+        req_ci = request.args.get('CI')
+        if req_ci is None:
+            req_ci = ''
+        else:
+            req_ci = "%{}%".format(req_ci)
+        req_dep = request.args.get('dep')
+        if req_dep is None:
+            req_dep = ''
+        else:
+            req_dep = "%{}%".format(req_dep)
+        req_data = mysql.session.query(Persona.ID, Persona.nombre, Persona.apellido_Paterno, Persona.apellido_Materno, Persona.CI, Cliente).filter(Persona.ID == Cliente.id_Persona, ((Persona.nombre.like(req_nomComp)) | (Persona.apellido_Paterno.like(req_nomComp)) | (Persona.apellido_Materno.like(req_nomComp))), Persona.CI.like(req_dep), Persona.CI.like(req_ci)).limit(10).all()
+        result = []
+        for cliente in req_data:
+            content = {'ID': cliente.Cliente.ID, 'CI': cliente.CI, 'nombre': cliente.nombre, 'apellido_Paterno': cliente.apellido_Paterno, 'apellido_Materno': cliente.apellido_Materno, 'NIT': cliente.Cliente.NIT, 'razon_Social': cliente.Cliente.razon_Social}
+            result.append(content)
+        return jsonify(result)
+    else:
+        return redirect("/login", code=302)
+
 @app.route('/request/cliente', methods=['POST'])
 def req_post_cliente():
     try:
@@ -425,13 +466,74 @@ def req_put_marca(number):
     if 'nombre' in request.form.keys():
         res_marca.nombre = request.form['nombre']
     mysql.session.commit()
-    return "True"
+    return "True"    
     
 @app.route('/request/marca', methods=['GET'])
+def request_get_marca():
+    res_marca = Marca.query.all()
+    result = marca_schema_multiple.dump(res_marca)
+    return jsonify(result)
 
+@app.route('/request/marca_greater-id=<number>', methods=['GET'])
+def request_get_marca_greaterId(number):
+    res_marca = Marca.query.filter(Marca.ID > number).limit(10).all()
+    result = marca_schema_multiple.dump(res_marca)
+    return jsonify(result)
+
+@app.route('/request/marca_less-id=<number>', methods=['GET'])
+def request_get_marca_lessId(number):
+    res_marca = Marca.query.filter(Marca.ID <= number).order_by(Marca.ID.asc()).limit(10).all()
+    result = marca_schema_multiple.dump(res_marca)
+    return jsonify(result)
+    
+@app.route('/request/marca/<name>', methods=['GET'])
+def req_get_searchName_marca(name):
+    if isLogging():
+        sear_name = "{}%".format(name)
+        res_marca = Marca.query.filter(Marca.nombre.like(sear_name)).limit(10).all()
+        result = marca_schema_multiple.dump(res_marca)
+        return jsonify(result)
+
+    else:
+        return redirect("/login", code=302)
 
 #-----------------------------------------------
 
+#------------------Categoria--------------------
+
+@app.route('/request/categoria/<number>', methods=['PUT'])
+def req_put_categoria(number):
+    res_categoria = Categoria.query.filter_by(ID = number).first()
+    if request.form is None or res_categoria is None:
+        return "False"
+    if 'nombre' in request.form.keys():
+        res_categoria.nombre = request.form['nombre']
+    mysql.session.commit()
+    return "True"
+
+@app.route('/request/categoria', methods=['GET'])
+def req_get_categoria():
+    all_categoria = Categoria.query.all()
+    result = categoria_schema_multiple.dump(all_categoria)
+    return jsonify(result)
+
+@app.route('/request/categoria/<number>', methods=['GET'])
+def req_get_categoria_select(number):
+    res_categoria = Categoria.query.get(number)
+    return categoria_schema_single.jsonify(res_categoria)
+
+@app.route('/request/categoria', methods=['POS'])
+def req_post_categoria():
+    try:
+        nombre = request.form['nombre']
+        new_categoria = Categoria(nombre)
+        mysql.session.add(new_categoria)
+        mysql.session.commit()
+        return redirect("/", code=302)
+    except KeyError as error:
+        return abort(400, str(error))
+
+#-----------------------------------------------
 
 #------------------Producto---------------------
 @app.route('/request/producto/<number>', methods=['PUT'])
@@ -469,24 +571,60 @@ def req_get_producto_select(number):
     res_producto = Producto.query.get(number)
     return producto_schema_single.jsonify(res_producto)
 
+@app.route('/request/producto_var', methods=['GET'])
+def req_get_producto_var():
+    if isLogging():
+        req_nom = request.args.get('name')
+        if req_nom is None:
+            req_nom = '%%'
+        else:
+            req_nom = "%{}%".format(req_nom)
+        req_mar = request.args.get('brand')
+        if req_mar is None:
+            req_mar = '%%'
+        else:
+            req_mar = "%{}%".format(req_mar)
+        req_cat = request.args.get('category')
+        if req_cat is None:
+            req_cat = '%%'
+        else:
+            req_cat = "%{}%".format(req_cat)
+        req_data = mysql.session.query(Producto.ID, Producto.nombre, Producto.garantia_Meses_Valido, Producto.precio_ConFactura, Producto.precio_SinFactura, Producto.precio_Tecnico, Producto.id_Marca, Producto.id_Categoria, Categoria, Marca).filter(Producto.id_Marca == Marca.ID, Producto.id_Categoria == Categoria.ID, Producto.nombre.like(req_nom), Categoria.nombre.like(req_cat), Marca.nombre.like(req_mar)).limit(10).all()
+        result = []
+        for data in req_data:
+            content = {'ID': data.ID, 'nombre': data.nombre, 'garantia_Meses_Valido': data.garantia_Meses_Valido, 'Marca': data.Marca.nombre, 'Categoria': str(data.Categoria.nombre), 'p_conFactura': str(data.precio_ConFactura), 'p_sinFactura': str(data.precio_SinFactura), 'p_tecnico': str(data.precio_Tecnico)}
+            result.append(content)
+        return jsonify(result)
+    else:
+        return redirect("/login", code=302)
+
 @app.route('/request/producto', methods=['POST'])
 def req_post_producto():
     try:
         data_Brand = getData('data_Brand')
         
         if data_Brand is None:
-            return abort(400)
+            return "False"
         
         data_Technician = getData('data_Technician')
         
         if data_Technician is None:
             return "False"
         
+        data_Category = getData('data_Category')
+        
+        if data_Category is None:
+            return "False"
+        
+        
+        
         nombre = request.form['name_field']
         descripcion = request.form['description_field']
         request_marca =  request.form['brand_field']
         request_tecnico = str(request.form['technician_field']).split(sep="-", maxsplit=1)
+        request_categoria = request.form['category_field']
         id_Marca = 0
+        id_cater = 0
         id_tec = None
         g_m_v = 0
         
@@ -496,6 +634,13 @@ def req_post_producto():
         
         if id_Marca == 0:
            return "False"
+       
+        for i in data_Category:
+            if str(i.nombre) == str(request_categoria):
+                id_cater = i.ID
+               
+        if id_cater == 0:
+            return "False"
            
         for i in data_Technician:
             if str(i.nombre + ' ' + i.apellido_Paterno + ' ' + i.apellido_Materno).lower() == request_tecnico[0].lower().strip():
@@ -508,13 +653,13 @@ def req_post_producto():
         precio_SF = float(request.form['pwob_field'])
         precio_CF = float(request.form['pwb_field'])
         precio_T = float(request.form['tpr_field'])
-        new_producto = Producto(nombre, descripcion, precio_SF, precio_CF, precio_T, g_m_v, id_Marca, id_tec)
+        new_producto = Producto(nombre, descripcion, precio_SF, precio_CF, precio_T, g_m_v, id_Marca, id_cater, id_tec)
         mysql.session.add(new_producto)
         mysql.session.commit()
         return redirect("/", code=302)
     except KeyError as error:
         return abort(400, str(error))
-
+    
 #----------------------------------------------
 
 #-------------------------Venta-------------------------
@@ -528,6 +673,8 @@ def req_put_venta(number):
         res_venta.total = request.form['total']
     if 'fecha_Venta' in request.form.keys():
         res_venta.fecha_Venta = request.form['fecha_Venta']
+    if 'tiene_Factura' in request.form.keys():
+        res_venta.tiene_Factura = request.form['tiene_Factura']
     if 'estado' in request.form.keys():
         res_venta.estado = request.form['estado']
     #if 'id_Cliente' in request.form.keys():
@@ -553,57 +700,110 @@ def req_get_venta_select(number):
 @app.route('/request/venta', methods=['POST'])
 def req_post_venta():
     try:
-        total = request.form['total']
-        fecha_V = request.form['fecha_Venta']
-        estado = request.form['estado']
-        id_Cliente = request.form['id_Cliente']
-        id_Empleado = request.form['id_Empleado']
-        new_venta = Venta(total, fecha_V, estado, id_Cliente, id_Empleado)
+        data_products = getData('req_data')
+        data_products = json.loads(data_products)
+        total = request.form.get('rsl-result-totalPrice')
+        if total is None:
+            return 'False'
+        total = float(total)
+        now = datetime.now()
+        fecha_V = now.strftime('%Y/%m/%d')
+        tiene_Fac = request.form.getlist('rsl-bill-check')
+        if tiene_Fac is None:
+            return 'False'
+        elif not tiene_Fac:
+            tiene_Fac = False
+        elif tiene_Fac[0] == 'on':
+            tiene_Fac = True
+        estado = 0
+        data_Client = str(request.form['rsl-sClient_field']).split(sep="--", maxsplit=1)
+        data_CI = data_Client[1].strip().split(sep="/", maxsplit=1)
+        if data_CI[0].lower() == 'pando':
+            data_CI[0] = 'pa'
+        elif data_CI[0].lower() == 'beni':
+            data_CI[0] = 'be'
+        elif data_CI[0].lower() == 'la paz':
+            data_CI[0] = 'lp'
+        elif data_CI[0].lower() == 'oruro':
+            data_CI[0] = 'or'
+        elif data_CI[0].lower() == 'potosí':
+            data_CI[0] = 'po'
+        elif data_CI[0].lower() == 'tarija':
+            data_CI[0] = 'ta'
+        elif data_CI[0].lower() == 'chuquisaca':
+            data_CI[0] = 'ch'
+        elif data_CI[0].lower() == 'cochabamba':
+            data_CI[0] = 'co'
+        elif data_CI[0].lower() == 'santa cruz':
+            data_CI[0] = 'sa'
+        elif data_CI[0].lower() == 'extranjero':
+            data_CI[0] = 'ex'
+        else:
+            return "False"
+        data_CI[0] = data_CI[0].upper()
+        data_CI = data_CI[0] + '-' + data_CI[1]
+        req_Client = mysql.session.query(Cliente, Persona.nombre, Persona.apellido_Paterno, Persona.apellido_Materno, Persona.CI).filter(Cliente.id_Persona == Persona.ID, Persona.CI == data_CI).first()
+        if req_Client is None:
+            return "False"
+        id_Cliente = req_Client.Cliente.ID
+        id_Empleado = getData('em_id')
+        id_Sucursal = mysql.session.query(Sucursal, Empleado.ID, Empleado.id_Sucursal).filter(Empleado.ID == id_Empleado, Empleado.id_Sucursal == Sucursal.ID).first().Sucursal.ID
+        new_venta = Venta(total, fecha_V, tiene_Fac, estado, id_Cliente, id_Empleado, id_Sucursal)
         mysql.session.add(new_venta)
         mysql.session.commit()
-        return "True"
+        id_Venta = new_venta.ID
+        for i in data_products:
+            req_Products = Producto.query.filter(Producto.nombre == i['name']).first()
+            id_Producto = req_Products.ID
+            req_Price = float(i['price'])
+            req_amount = int(int(i['amount']))
+            req_Total = float(req_Price * req_amount)
+            new_ProductoVendido = Producto_vendido(req_Price, req_amount, req_Total, id_Producto, id_Venta)
+            mysql.session.add(new_ProductoVendido)
+        mysql.session.commit()
+        return redirect("/", code=302)
     except KeyError:
         return "False"
 
 #-------------------------------------------------------
 
-#------------------Producto_Vendido---------------------
-@app.route('/request/producto_Vendido/<idproducto>/<idventa>', methods=['PUT'])
-def req_put_producto_Vendido(idproducto, idventa):
-    res_producto_Vendido = Producto_Vendido.query.filter_by(id_Producto=idproducto, id_Venta=idventa).first()
-    if request.form is None or res_producto_Vendido is None:
+#------------------Producto_vendido---------------------
+@app.route('/request/Producto_vendido/<idproducto>/<idventa>', methods=['PUT'])
+def req_put_Producto_vendido(idproducto, idventa):
+    res_Producto_vendido = Producto_vendido.query.filter_by(id_Producto=idproducto, id_Venta=idventa).first()
+    if request.form is None or res_Producto_vendido is None:
         return "False"
     if 'cantidad' in request.form.keys():
-        res_producto_Vendido.cantidad = request.form['cantidad']
+        res_Producto_vendido.cantidad = request.form['cantidad']
     if 'total' in request.form.keys():
-        res_producto_Vendido.total = request.form['total']
+        res_Producto_vendido.total = request.form['total']
     #if 'id_Producto' in request.form.keys():
-    #    res_producto_Vendido.id_Producto = request.form['id_Producto']
+    #    res_Producto_vendido.id_Producto = request.form['id_Producto']
     #if 'id_Venta' in request.form.keys():
-    #    res_producto_Vendido.id_Venta = request.form['id_Venta']
+    #    res_Producto_vendido.id_Venta = request.form['id_Venta']
     mysql.session.commit()
     return "True"
 
-@app.route('/request/producto_Vendido', methods=['GET'])
-def req_get_producto_Vendido():
-    all_producto_Vendido = Producto_Vendido.query.all()
-    result = producto_vendido_schema_multiple.dump(all_producto_Vendido)
+@app.route('/request/Producto_vendido', methods=['GET'])
+def req_get_Producto_vendido():
+    all_Producto_vendido = Producto_vendido.query.all()
+    result = producto_vendido_schema_multiple.dump(all_Producto_vendido)
     return jsonify(result)
 
-@app.route('/request/producto_Vendido/<idproducto>/<idventa>', methods=['GET'])
-def req_get_producto_Vendido_select(idproducto, idventa):
-    res_producto_Vendido = Producto_Vendido.query.get((idproducto, idventa))
-    return producto_vendido_schema_single.jsonify(res_producto_Vendido)
+@app.route('/request/Producto_vendido/<idproducto>/<idventa>', methods=['GET'])
+def req_get_Producto_vendido_select(idproducto, idventa):
+    res_Producto_vendido = Producto_vendido.query.get((idproducto, idventa))
+    return producto_vendido_schema_single.jsonify(res_Producto_vendido)
 
-@app.route('/request/producto_Vendido', methods=['POST'])
-def req_post_producto_Vendido():
+@app.route('/request/Producto_vendido', methods=['POST'])
+def req_post_Producto_vendido():
     try:
         cantidad = request.form['cantidad']
         total = request.form['total']
         id_Producto = request.form['id_Producto']
         id_Venta = request.form['id_Venta']
-        new_producto_Vendido = Producto_Vendido(cantidad, total, id_Producto, id_Venta)
-        mysql.session.add(new_producto_Vendido)
+        new_Producto_vendido = Producto_vendido(cantidad, total, id_Producto, id_Venta)
+        mysql.session.add(new_Producto_vendido)
         mysql.session.commit()
         return "True"
     except KeyError:

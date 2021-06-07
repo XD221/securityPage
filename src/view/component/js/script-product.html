@@ -1,0 +1,256 @@
+<script type="text/javascript" >
+    $cn_ini_cB = 0
+    $cn_ini_cT = 0
+    $cn_ls_cB = 0
+    $cn_ls_cT = 0
+    $cn_nx_cB = 0
+    $cn_nx_cT = 0
+    
+    
+    if ($('#rpr-brandTable > tbody > tr').length){
+        $cn_ini_cB = {{ dataBrand[0].ID }};
+        $cn_nx_cB = {{ dataBrand[-1].ID }};
+    }
+
+    if ($('#rpr-technicianTable > tbody > tr').length){
+        $cn_ini_cT = {{ dataTechnician[0].ID }};
+        $cn_nx_cT = {{ dataTechnician[-1].ID }};
+    }
+
+    $cn_b = {{ count_Brand }}
+    $cn_t = {{ count_Technician }}
+    function loadRow_brand(data){
+        $cn_fb = 0
+        $('#rpr-brandTable > tbody').empty();
+        $.each(data, function(index, value){
+            $('#rpr-brandTable > tbody').append(
+                $('<tr>').append(
+                    $('<td>').attr('class', 'col s9').append(
+                        $('<span>').attr('id', 'brand_' + value['ID']).text(value['nombre']))
+                ).append(
+                    $('<td>').attr('class', 'col s3').append(
+                        $('<input>').attr('id', 'btnBrand_' + value['ID']).attr('class', 'col s12 btnBrandSelect').attr('type', 'button').attr('value', 'Select')
+                    )
+                )
+            );
+            $cn_fb = (index + 1)
+        });
+        if ($cn_fb > 0){
+            $('#rpr-brandTable > tbody').append(
+                $('<tr>').append(
+                    $('<td>').attr('class', 'col s9')
+                ).append(
+                    $('<td>').attr('class', 'col s3').append(
+                        $('<input>').attr('id', 'btnBrand_Unselect').attr('class', 'col s12').attr('type', 'button').attr('value', 'Unselect')
+                    )
+                )
+            );  
+            
+        }
+    }
+    $('.modal').modal({
+        dismissible: false, // Modal can be dismissed by clicking outside of the modal
+        opacity: 0, // Opacity of modal background
+        inDuration: 300, // Transition in duration
+        outDuration: 200, // Transition out duration
+        startingTop: '4%', // Starting top style attribute
+        endingTop: '10%', // Ending top style attribute
+        ready: function(modal, trigger) { // Callback for Modal open. Modal and trigger parameters available.
+          //empty
+        },
+        complete: function() {
+            //empty
+         } // Callback for Modal close
+    });
+
+    $('#rpr-brand-previous').click(function(){
+        if($cn_ls_cB > $cn_ini_cB){
+            $.ajax({
+                url: '/request/marca_less-id=' + $cn_ls_cB,
+                data: '',
+                type: 'GET',
+                success: function(data){
+                    loadRow_brand(data);
+                    $cn_nx_cB = $cn_ls_cB;
+                    $cn_ls_cB = $(data).get(0)['ID'];
+                    
+                },
+                error: function (error){
+                    $('#rpr-br-errMessage').text('Error 500.1');
+                }
+            });
+        }
+    });
+
+    $('#rpr-brand-next').click(function(){
+        if($cn_b > $cn_nx_cB){
+            $.ajax({
+                url: '/request/marca_greater-id=' + $cn_nx_cB,
+                data: '',
+                type: 'GET',
+                success: function(data){
+                    loadRow_brand(data);
+                    $cn_ls_cB = $cn_nx_cB;
+                    $cn_nx_cB = $(data).get(-1)['ID'];
+                },
+                error: function (error){
+                    $('#rpr-br-errMessage').text('Error 500.1');
+                }
+            });
+        }
+    });
+
+    $('#btn_Brand_Cancel').click(function(){
+        $('#add_Brand').modal('close');
+    });
+
+    $('#btn_Technician_Cancel').click(function(){
+        $('#add_Technician').modal('close');
+    });
+
+    $('#btn_Category_Cancel').click(function(){
+        $('#add_Category').modal('close');
+    });
+
+    $('#register-Product_AddBrand').click(function(){
+        $('#add_Brand').modal('open');
+    });
+
+    $('#register-Product_AddCategory').click(function(){
+        $('#add_Category').modal('open');
+    });
+
+    $('body').on('click', '.btnBrandSelect', function(){
+        $('#brand_field').val($('#brand_' + $(this).attr('id').substr(9)).text());
+        $('#add_Brand').modal('close');
+    }); 
+
+    $('.btnTechnicianSelect').click(function(){
+        var vrfn = $('#technician_fName_' + $(this).attr('id').substr(14));
+        var vrtl = $('#technician_pNumber_' + $(this).attr('id').substr(14));
+        $('#technician_field').val(vrfn.text() + ' - ' + vrtl.text());
+        $('#add_Technician').modal('close');
+    });
+
+    $('body').on('click', '.btnCategorySelect', function(){
+        $('#category_field').val($('#category_' + $(this).attr('id').substr(12)).text());
+        $('#add_Category').modal('close');
+    });
+
+    $('body').on('click', '#btnBrand_Unselect', function(){
+        $('#brand_field').val('');
+        $('#add_Brand').modal('close');
+    });
+
+    $('#btnTechnician_Unselect').click(function(){
+        $('#technician_field').val('');
+        $('#add_Technician').modal('close');
+    });
+
+    $('#register-Product_AddTechnician').click(function(){
+        $('#add_Technician').modal('open');
+    });
+
+    $('#pwb_field, #pwob_field, #tp_field, #gt_field').keydown(function (e) {
+        if (e.keyCode == 109 || e.keyCode == 107) {
+            e.preventDefault();
+            return false;
+        }
+    });
+
+    $('#gt_field').keypress(function (e) {
+        var key = e.keyCode;
+        if (key == 101 || key == 46 || key == 43 || key == 45){
+            e.preventDefault();
+            return false;
+        }
+    });
+
+    $('#pwb_field, #pwob_field, #tp_field').keypress(function (e) {
+        var key = e.keyCode;
+        if (key == 101 || key == 43 || key == 45){
+            e.preventDefault();
+            return false;
+        }
+        if ($(this).val().length == 0 && key == 46){
+            e.preventDefault();
+            return false;
+        }
+    });
+    
+    $('#name_field').keydown(function (e) {
+        var key = e.keyCode;
+        if (e.ctrlKey || e.altKey) {
+            e.preventDefault();
+        } else {
+            if (!((key == 8) || (key == 32) || (key == 46) || (key >= 35 && key <= 40) || (key >= 65 && key <= 90))) {
+                e.preventDefault();
+            }
+        }
+    });
+    $('#name_field').keypress(function(e) {
+        var key = e.keyCode;
+        if (e.shiftKey){
+            if (!((key >= 65 && key <= 90)))  {   
+                e.preventDefault();
+                return;
+            }
+        }else{
+            if (!((key >= 97 && key <= 122) || key == 32) || key == 13)  { 
+                e.preventDefault();
+            return;
+            }
+        }
+    });
+    $('#description_field').keydown(function (e) {
+        var key = e.keyCode;
+        if (e.ctrlKey || e.altKey) {
+            e.preventDefault();
+        } else {
+            if (!((key == 8) || (key == 32) || (key == 46) || (key >= 35 && key <= 40) || (key >= 65 && key <= 90) || key == 13 || key == 190 || key == 188 || key == 186 || key == 57 || key == 48 || key == 56)) {
+                e.preventDefault();
+            }
+        }
+    });
+    $('#description_field').keypress(function(e) {
+        var key = e.keyCode;
+        if (e.shiftKey){
+            if (!((key >= 65 && key <= 90) || key == 58 || key == 40 || key == 41))  { 
+                e.preventDefault();
+                return;
+            }
+        }else{
+            if (!((key >= 97 && key <= 122) || key == 32 || key == 13 || key == 46 || key == 44))  { 
+                e.preventDefault();
+            return;
+            }
+        }
+    });
+    $('#rpr-br-btn').click(function(){
+        if ($('#rpr-br-sName_field').val().length > 0){
+            $.ajax({
+                url: '/request/marca/' + $('#rpr-br-sName_field').val(),
+                data: '',
+                type: 'GET',
+                success: function(data){
+                    loadRow_brand(data);
+                },
+                error: function (error){
+                    $('#rpr-br-errMessage').text('Error 500.1');
+                }
+            });
+        }else{
+            $.ajax({
+                url: '/request/marca_greater-id=0',
+                data: '',
+                type: 'GET',
+                success: function(data){
+                    loadRow_brand(data);
+                },
+                error: function (error){
+                    $('#rpr-br-errMessage').text('Error 500.1');
+                }
+            });
+        }
+    });
+</script>

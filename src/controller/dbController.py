@@ -209,11 +209,30 @@ class Marca(mysql.Model):
 
 #---------------------------------
 
+#------------Categoria------------
+
+class CategoriaSchema(ma.Schema):
+    class Meta:
+        fields = ('ID', 'nombre')
+
+categoria_schema_single = CategoriaSchema()
+categoria_schema_multiple = CategoriaSchema(many=True)
+
+class Categoria(mysql.Model):
+    ID = mysql.Column(mysql.Integer, primary_key=True)
+    nombre = mysql.Column(mysql.String)
+    
+    def __init__(self, nombre):
+        self.nombre = nombre
+    
+    def __repr__(self):
+        return '<Categoria %r>' % self.nombre
+
 #------------Producto-------------
 
 class ProductoSchema(ma.Schema):
     class Meta:
-        fields = ('ID', 'nombre', 'descripcion', 'precio_SinFactura', 'precio_ConFactura', 'precio_Tecnico', 'garantia_Meses_Valido', 'id_Marca', 'id_Tecnico')
+        fields = ('ID', 'nombre', 'descripcion', 'precio_SinFactura', 'precio_ConFactura', 'precio_Tecnico', 'garantia_Meses_Valido', 'id_Marca', 'id_Categoria', 'id_Tecnico')
         
 producto_schema_single = ProductoSchema()
 producto_schema_multiple = ProductoSchema(many=True)
@@ -227,9 +246,10 @@ class Producto(mysql.Model):
     precio_Tecnico = mysql.Column(mysql.Numeric(6,2), nullable=False)
     garantia_Meses_Valido = mysql.Column(mysql.Integer, nullable=False)
     id_Marca = mysql.Column(mysql.Integer, mysql.ForeignKey('marca.ID'))
+    id_Categoria = mysql.Column(mysql.Integer, mysql.ForeignKey('categoria.ID'))
     id_Tecnico = mysql.Column(mysql.Integer, mysql.ForeignKey('tecnico.ID'))
     
-    def __init__(self, nombre, descripcion, precio_SinFactura, precio_ConFactura, precio_Tecnico, garantia_Meses_Valido, id_Marca, id_Tecnico):
+    def __init__(self, nombre, descripcion, precio_SinFactura, precio_ConFactura, precio_Tecnico, garantia_Meses_Valido, id_Marca, id_Categoria, id_Tecnico):
         self.nombre = nombre
         self.descripcion = descripcion
         self.precio_SinFactura = precio_SinFactura
@@ -237,6 +257,7 @@ class Producto(mysql.Model):
         self.precio_Tecnico = precio_Tecnico
         self.garantia_Meses_Valido = garantia_Meses_Valido
         self.id_Marca = id_Marca
+        self.id_Categoria = id_Categoria
         self.id_Tecnico = id_Tecnico
         
     def __repr__(self):
@@ -248,7 +269,7 @@ class Producto(mysql.Model):
 
 class VentaSchema(ma.Schema):
     class Meta:
-        fields = ('ID', 'total', 'fecha_Venta', 'estado', 'id_Cliente', 'id_Empleado', 'id_Sucursal')
+        fields = ('ID', 'total', 'fecha_Venta', 'tiene_Factura', 'estado', 'id_Cliente', 'id_Empleado', 'id_Sucursal')
 
 venta_schema_single = VentaSchema()
 venta_schema_multiple = VentaSchema(many=True)
@@ -257,14 +278,16 @@ class Venta(mysql.Model):
     ID = mysql.Column(mysql.Integer, primary_key=True)
     total = mysql.Column(mysql.Numeric(6,2), nullable=False)
     fecha_Venta = mysql.Column(mysql.Date(), nullable=False)
+    tiene_Factura = mysql.Column(mysql.Boolean, nullable=False)
     estado = mysql.Column(mysql.Integer, nullable=False)
     id_Cliente = mysql.Column(mysql.Integer, mysql.ForeignKey('cliente.ID'),nullable=False)
     id_Empleado = mysql.Column(mysql.Integer, mysql.ForeignKey('empleado.ID'),nullable=False)
     id_Sucursal = mysql.Column(mysql.Integer, mysql.ForeignKey('sucursal.ID'))
     
-    def __init__(self, total, fecha_Venta, estado, id_Cliente, id_Empleado, id_Sucursal):
+    def __init__(self, total, fecha_Venta, tiene_Factura,estado, id_Cliente, id_Empleado, id_Sucursal):
         self.total = total
         self.fecha_Venta = fecha_Venta
+        self.tiene_Factura = tiene_Factura
         self.estado = estado
         self.id_Cliente = id_Cliente
         self.id_Empleado = id_Empleado
@@ -277,14 +300,14 @@ class Venta(mysql.Model):
 
 #--------Producto_Vendido---------
 
-class Producto_VendidoSchema(ma.Schema):
+class Producto_vendidoSchema(ma.Schema):
     class Meta:
         fields = ('precio_Unitario','cantidad', 'total', 'id_Producto', 'id_Venta')
         
-producto_vendido_schema_single = Producto_VendidoSchema()
-producto_vendido_schema_multiple = Producto_VendidoSchema(many=True)
+producto_vendido_schema_single = Producto_vendidoSchema()
+producto_vendido_schema_multiple = Producto_vendidoSchema(many=True)
 
-class Producto_Vendido(mysql.Model):
+class Producto_vendido(mysql.Model):
     precio_Unitario = mysql.Column(mysql.Numeric(6,2))
     cantidad = mysql.Column(mysql.Integer, nullable=True)
     total = mysql.Column(mysql.Numeric(6,2), nullable=True)

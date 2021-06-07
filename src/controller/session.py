@@ -51,6 +51,7 @@ def signIn(username, password):
     if sess_data is None:
         return 2
     session['user_id'] = account.ID
+    session['em_id'] = sess_data.Empleado.ID
     session['nombre'] = sess_data.Persona.nombre
     session['ap_Paterno'] = sess_data.Persona.apellido_Paterno
     session['ap_Materno'] = sess_data.Persona.apellido_Materno

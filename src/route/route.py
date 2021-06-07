@@ -29,30 +29,46 @@ def profile(ret_message):
     
     return render_template('profile.html', name = inf_name, fLast = inf_fLast, mLast = inf_mLast, pNumber = inf_pNumber, email = inf_email, sex = inf_sex, bDate = info_bDate, errMessage = ret_message)
 
-def new_Client():
-    return render_template('restricted/new_Client.html')
+def client():
+    return render_template('restricted/client.html')
 
-def register_Sales():
-    return render_template('restricted/register_Sales.html')
+def sales():
+    return render_template('restricted/sales.html')
 
-def show_Sales():
-    return render_template('restricted/show_Sales.html')
-
-def register_Inventory():
+def inventory():
     global sess_global
     idSucursal = sess_global('sucursal_id')
-    return render_template('restricted/register_Inventory.html', sucursal_code = idSucursal)
+    return render_template('restricted/inventory.html', sucursal_code = idSucursal)
 
-def register_Product():
+def product():
     get_Brand = getData('data_Brand')
     get_Technician = getData('data_Technician')
-    if get_Brand is None:
-        data_Brands = Marca.query.distinct().all()
+    get_Category = getData('data_Category')
+    get_Count_Brand = getData('data_Count_Brand')
+    get_Count_Technician = getData('data_Count_Technician')
+    get_Count_Category = getData('data_Count_Category')
+    if get_Brand is None or get_Count_Brand is None:
+        count_Brands = Marca.query.count()
+        data_Brands = Marca.query.filter(Marca.ID >= 0).limit(10).all()
         saveData('data_Brand', data_Brands)
+        saveData('data_Count_Brand', count_Brands)
         get_Brand = getData('data_Brand')
-    if get_Technician is None:
-        data_Technicians = mysql.session.query(Persona.ID, Persona.nombre, Persona.apellido_Paterno, Persona.apellido_Materno, Persona.telefono, Tecnico).filter(Persona.ID == Tecnico.id_Persona, Tecnico.estado == 0).all()
+        get_Count_Brand = getData('data_Count_Brand')
+    if get_Technician is None or get_Count_Technician is None:
+        count_Technicians = Tecnico.query.count()
+        data_Technicians = mysql.session.query(Persona.ID, Persona.nombre, Persona.apellido_Paterno, Persona.apellido_Materno, Persona.telefono, Tecnico).filter(Cuenta.ID >= 0, Persona.ID == Tecnico.id_Persona, Tecnico.estado == 0).limit(10).all()
         saveData('data_Technician', data_Technicians)
+        saveData('data_Count_Technician', count_Technicians)
         get_Technician = getData('data_Technician')
+        get_Count_Technician = getData('data_Count_Technician')
     
-    return render_template('restricted/register_Product.html', dataBrand = get_Brand, dataTechnician = get_Technician)
+    if get_Category is None or get_Count_Category is None:
+        count_Categories = Categoria.query.count()
+        data_Categories = Categoria.query.filter(Categoria.ID >= 0).limit(10).all()
+        saveData('data_Category', data_Categories)
+        saveData('data_Count_Category', count_Categories)
+        get_Category = getData('data_Category')
+        get_Count_Category = getData('data_Count_Category')
+        
+    
+    return render_template('restricted/product.html', dataBrand = get_Brand, dataTechnician = get_Technician, dataCategory = get_Category, count_Brand = get_Count_Brand, count_Technician = get_Count_Technician, count_Category = get_Count_Category)

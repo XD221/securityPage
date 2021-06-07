@@ -1,38 +1,34 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset='UTF-8'>
-        <meta name='viewport' content='width=device-width, initial-scale=0'>
-        <style type="text/css" >
-            .modal-overlay{
-                z-index: -1 !important;
-            }
-            input::-webkit-outer-spin-button,
-            input::-webkit-inner-spin-button {
-              -webkit-appearance: none;
-              margin: 0;
-            }
-            input[type=number] {
-              -moz-appearance: textfield;
-            }
-        </style>
-    </head>
-    <body>
-        <header>
-        </header>
-        <div id="Container-registerProduct" class='container row valign-wrapper' style='width: 90%;' >
-            <div class='col s12 card-panel' >
+{% extends "layout.html" %}
+{% block title %}Product{% endblock %}
+{% block head %}
+    {% include "component/css/css-product.html" %}
+{% endblock %}
+{% block content %}
+    <div id="Container-Sales" class='container row valign-wrapper' >
+        <div class='col s12 card-panel' style='width: 90%; padding: 0;' >
+            <nav class="col s12 nav-extended transparent">
+                <div class="nav-content">
+                    <ul class="tabs tabs-transparent">
+                        <li class="tab"><a class="active" href="#pr-register">Register</a></li>
+                        <li class="tab"><a  href="#pr-show">Show</a></li>
+                        <li class="tab disabled"><a href="#pr-modify">Modify</a></li>
+                        <li class="tab"><a href="#pr-delete">Delete</a></li>
+                    </ul>
+                </div>
+            </nav>
+
+            <div id="pr-register" class="col s12">
                 <h5 class='col s7 offset-s4 card-title blue-text' style="margin-top: 25px; margin-bottom: 20px;" >Register Product</h5>
                 <div class="row">
                     <form id='nc-form' class="col s12" method="POST" action="/request/producto" >
                         <div class="row">
                             <div class="input-field col s9 offset-s1">
-                                <input placeholder="None" id="name_field" name='name_field' type="text" class="inp validate white-text blue accent-2" pattern="[A-Za-z]{3,}" maxlength="16" required >
+                                <input placeholder="None" id="name_field" name='name_field' type="text" class="inp validate white-text blue accent-2" pattern="[A-Za-z]{3,}" maxlength="50" required >
                                 <label for="name_field">Name</label>
                             </div>
                             <div class="input-field col s9 offset-s1">
-                                <textarea id="description_field" name='description_field' class="materialize-textarea" maxlength="99" pattern="[A-Za-z]{4,}" required ></textarea>
-                                <label for="description_field">Descripction</label>
+                                <textarea id="description_field" name='description_field' class="materialize-textarea" maxlength="253" pattern="[A-Za-z]{4,}" required ></textarea>
+                                <label for="description_field">Description</label>
                             </div>
                             <div class="input-field col s9 offset-s1">
                                 <input readonly placeholder="None" id="brand_field" name='brand_field' type="text" class="inp validate white-text blue accent-2" pattern="[A-Za-z]+" maxlength="40" required >
@@ -42,7 +38,13 @@
                             <div id="add_Brand" class="modal modal-fixed-footer" >
                                 <div class="modal-content">
                                     <h4 class="center-align" style="margin-bottom: 20px;" >Select Brand</h4>
-                                    <table class='col s8 offset-s1' >
+                                    <p id='rpr-br-errMessage' class='col s11 offset-s1  red-text' ></p>
+                                    <div class="input-field col s9 offset-s1">
+                                        <input placeholder="None" id="rpr-br-sName_field" type="text" class="inp validate white-text blue accent-2" maxlength="16" >
+                                        <label for="rpr-br-sName_field">Search Name</label>
+                                    </div>
+                                    <button id='rpr-br-btn' class="btn grey lighten-2 light-blue-text" type="button" name="rpr-br-btn" style="margin-top: 10px;" >Search</button>
+                                    <table id='rpr-brandTable' class='col s8 offset-s1' >
                                         <thead>
                                             <tr>
                                                 <th class='col s9' >Name</th>
@@ -64,6 +66,10 @@
                                             {% endif %}
                                         </tbody>
                                     </table >
+                                    <div class='col s12 center-align' style="padding-bottom: 30px;" >
+                                        <button id='rpr-brand-previous' class="col s3 offset-s1 btn grey lighten-2 light-blue-text" type="button" style="margin-top: 20px;" >PREVIOUS</button>
+                                        <button id='rpr-brand-next' class="col s3 offset-s1 btn grey lighten-2 light-blue-text" type="button" style="margin-top: 20px;" >NEXT</button>
+                                    </div>
                                 </div>
                                 <div class="modal-footer">
                                     <a id='btn_Brand_NewBrand' href="" class="modal-action modal-close waves-effect waves-green btn-flat" >New Brand</a>
@@ -71,14 +77,14 @@
                                 </div>
                             </div>
                             <div class="input-field col s9 offset-s1">
-                                <input readonly placeholder="None" id="technician_field" name='technician_field' type="text" class="inp validate white-text blue accent-2" pattern="[A-Za-z]+" maxlength="64" required >
+                                <input readonly placeholder="None" id="technician_field" name='technician_field' type="text" class="inp validate white-text blue accent-2" pattern="[A-Za-z]+" maxlength="64" >
                                 <label for="technician_field">Technician</label>
                             </div>
                             <a id="register-Product_AddTechnician" class='col s2' style="padding: 0 !important;" ><i class="inp material-icons black-text waves-effect waves-light modal-trigger" style="margin-top: 25px !important;" >add_circle</i></a>
                             <div id="add_Technician" class="modal modal-fixed-footer">
                                 <div class="modal-content">
                                     <h4 class="center-align" >Select Technician</h4>
-                                    <table class='col s8 offset-s1' >
+                                    <table id='rpr-technicianTable' class='col s8 offset-s1' >
                                         <thead>
                                             <tr>
                                                 <th class='col s6' >Full Name</th>
@@ -105,8 +111,45 @@
                                     </table >
                                 </div>
                                 <div class="modal-footer">
-                                    <a id='btn_Technician_NewTechnician' href="#!" class="modal-action modal-close waves-effect waves-green btn-flat" >New Technician</a>
+                                    <a id='btn_Technician_NewTechnician' href="#" class="modal-action modal-close waves-effect waves-green btn-flat" >New Technician</a>
                                     <a id='btn_Technician_Cancel' href="#!" class="modal-action modal-close waves-effect waves-green btn-flat" >Cancel</a>
+                                </div>
+                            </div>
+                            <div class="input-field col s9 offset-s1">
+                                <input readonly placeholder="None" id="category_field" name='category_field' type="text" class="inp validate white-text blue accent-2" pattern="[A-Za-z]+" maxlength="42" required >
+                                <label for="technician_field">Category</label>
+                            </div>
+                            <a id="register-Product_AddCategory" class='col s2' style="padding: 0 !important;" ><i class="inp material-icons black-text waves-effect waves-light modal-trigger" style="margin-top: 25px !important;" >add_circle</i></a>
+                            <div id="add_Category" class="modal modal-fixed-footer">
+                                <div class="modal-content">
+                                    <h4 class="center-align" >Select Category</h4>
+                                    <table id='rpr-technicianTable' class='col s8 offset-s1' >
+                                        <thead>
+                                            <tr>
+                                                <th class='col s6' >Name</th>
+                                                <th class='col s3'  >Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% if dataCategory is defined and dataCategory is not none %}
+                                                {% for category in dataCategory %}
+                                                    <tr>
+                                                        <td class="col s6" ><span id="category_{{category.ID}}" >{{category.nombre}}</span></td>
+                                                        <td class="col s3" ><input id="btnCategory_{{category.ID}}" class="col s12 btnCategorySelect" type="button" value="Select" ></td>
+                                                    </tr>
+                                                {% endfor %}
+                                                <tr>
+                                                    <td class="col s6" ></td>
+                                                    <td class="col s3" ></td>
+                                                    <td class="col s3" ><input id="btnCategory_Unselect" class="col s12" type="button" value="Unselect" ></td>
+                                                </tr>
+                                            {% endif %}
+                                        </tbody>
+                                    </table >
+                                </div>
+                                <div class="modal-footer">
+                                    <a id='btn_Category_NewCategory' href="#" class="modal-action modal-close waves-effect waves-green btn-flat" >New Category</a>
+                                    <a id='btn_Category_Cancel' href="#!" class="modal-action modal-close waves-effect waves-green btn-flat" >Cancel</a>
                                 </div>
                             </div>
                             <div class="input-field col s9 offset-s1">
@@ -125,118 +168,17 @@
                                 <input placeholder="None" id="gt_field" name='gt_field' type="number" class="inp validate white-text blue accent-2" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" min="0" maxlength="3" value="0" required >
                                 <label for="tp_field">Valid Time Month</label>
                             </div>
-                            <button id='nc-submit' class="col s9 offset-s1 btn grey lighten-2 light-blue-text" type="submit" name="action" style="margin-top: 20px;" >CONFIRM</button>
+                            <button id='rpr-submit' class="col s9 offset-s1 btn grey lighten-2 light-blue-text" type="submit" name="action" style="margin-top: 20px;" >CONFIRM</button>
                         </div>
                     </form>
                 </div>
             </div>
+            <div id="pr-show" class="col s12">Show</div>
+            <div id="pr-modify" class="col s12">Modify</div>
+            <div id="pr-delete" class="col s12">Delete</div>
         </div>
-    </body>
-    <footer>
-        <script type="text/javascript" >
-            $('.modal').modal({
-                dismissible: false, // Modal can be dismissed by clicking outside of the modal
-                opacity: 0, // Opacity of modal background
-                inDuration: 300, // Transition in duration
-                outDuration: 200, // Transition out duration
-                startingTop: '4%', // Starting top style attribute
-                endingTop: '10%', // Ending top style attribute
-                ready: function(modal, trigger) { // Callback for Modal open. Modal and trigger parameters available.
-                  //empty
-                },
-                complete: function() {
-                    //empty
-                 } // Callback for Modal close
-            });
-
-            $('#btn_Brand_Cancel').click(function(){
-                $('#add_Brand').modal('close');
-            });
-
-            $('#register-Product_AddBrand').click(function(){
-                $('#add_Brand').modal('open');
-            });
-
-            $('.btnBrandSelect').click(function(){
-                $('#brand_field').val($('#brand_' + $(this).attr('id').substr(9)).text());
-                $('#add_Brand').modal('close');
-            }); 
-
-            $('.btnTechnicianSelect').click(function(){
-                var vrfn = $('#technician_fName_' + $(this).attr('id').substr(14));
-                var vrtl = $('#technician_pNumber_' + $(this).attr('id').substr(14));
-                $('#technician_field').val(vrfn.text() + ' - ' + vrtl.text());
-                $('#add_Technician').modal('close');
-            });
-
-            $('#btnBrand_Unselect').click(function(){
-                $('#brand_field').val('');
-                $('#add_Brand').modal('close');
-            });
-
-            $('#btnTechnician_Unselect').click(function(){
-                $('#technician_field').val('');
-                $('#add_Technician').modal('close');
-            });
-
-            $('#register-Product_AddTechnician').click(function(){
-                $('#add_Technician').modal('open');
-            });
-
-            $('#pwb_field, #pwob_field, #tp_field, #gt_field').keydown(function (e) {
-                if (e.keyCode == 109 || e.keyCode == 107) {
-                    e.preventDefault();
-                    return false;
-                }
-            });
-
-            $('#gt_field').keypress(function (e) {
-                var key = e.keyCode;
-                if (key == 101 || key == 46 || key == 43 || key == 45){
-                    e.preventDefault();
-                    return false;
-                }
-            });
-
-            $('#pwb_field, #pwob_field, #tp_field').keypress(function (e) {
-                var key = e.keyCode;
-                if (key == 101 || key == 43 || key == 45){
-                    e.preventDefault();
-                    return false;
-                }
-                if ($(this).val().length == 0 && key == 46){
-                    e.preventDefault();
-                    return false;
-                }
-            });
-            
-            $('#name_field, #description_field').keydown(function (e) {
-                var key = e.keyCode;
-                if (e.ctrlKey || e.altKey) {
-                    e.preventDefault();
-                } else {
-                    if (!((key == 8) || (key == 32) || (key == 46) || (key >= 35 && key <= 40) || (key >= 65 && key <= 90))) {
-                        e.preventDefault();
-                    }
-                }
-            });
-            $('#name_field, #description_field').keypress(function(e) {
-                var key = e.keyCode;
-                if (e.shiftKey){
-                    if (!((key >= 65 && key <= 90)))  {   
-                        e.preventDefault();
-                        return;
-                    }
-                }else{
-                    if (!((key >= 97 && key <= 122)))  { 
-                        e.preventDefault();
-                    return;
-                    }
-                }
-            });
-
-        </script>
-        <script type='text/javascript' src="{{ url_for('static', filename='js/materialize.js') }}" ></script>
-        <script type='text/javascript' src="{{ url_for('static', filename='js/materialize.min.js') }}" ></script>
-    </footer>
-</html>
+    </div>
+{% endblock %}
+{% block footer %}
+    {% include "component/js/script-product.html" %}
+{% endblock %}

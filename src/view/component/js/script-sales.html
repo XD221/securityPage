@@ -1,0 +1,444 @@
+<script type="text/javascript" >
+    function updateTotal(){
+        var $result = 0;
+        $('#rsl-regSl .rsl-addProduct-price').each(function(){
+            $result = parseFloat(parseFloat($result) + parseFloat($(this).text())).toFixed(2);
+        });
+        $('#rsl-result-totalPrice').val($result);
+    }
+    function sf_price(){
+        $('.rsl-addProduct-price').each(function(){
+            $(this).text($(this).attr('p_sf'));
+        });
+        updateTotal();
+    }
+    function cf_price(){
+        $('.rsl-addProduct-price').each(function(){
+            $(this).text($(this).attr('p_cf'));
+        });
+        updateTotal();
+    }
+    function t_price(){
+        $('.rsl-addProduct-price').each(function(){
+            $(this).text($(this).attr('p_t'));
+        });
+        updateTotal();
+    }
+    function updatePrice(data){
+        if($('#rsl-technical-check').prop('checked')){
+            data.text(data.attr('p_t'));
+        }else{
+            if($('#rsl-bill-check').prop('checked')){
+                data.text(data.attr('p_cf'));
+            }else{
+                data.text(data.attr('p_sf'));
+            }
+        }
+    }
+    function check_idProduct(id){
+        $cn_cn = 0;
+        $loop_cn = $('#rsl-regSl > tbody > tr > td').find('input, span');
+        $loop_cn.each(function(){
+            if('rsl-product_' + id == $(this).attr('id')){
+                $cn_cn = $cn_cn + 1;
+                return false;
+            }
+            else if('rsl-product-wt_' + id == $(this).attr('id')){
+                $cn_cn = $cn_cn + 1;
+                return false;
+            }
+            else if('rsl-product-price_' + id == $(this).attr('id')){
+                $cn_cn = $cn_cn + 1;
+                return false;
+            }
+            else if('rsl-product-amount_' + id == $(this).attr('id')){
+                $cn_cn = $cn_cn + 1;
+                return false;
+            }
+            else if('rsl-btnProduct-delete_' + id == $(this).attr('id')){
+                $cn_cn = $cn_cn + 1;
+                return false;
+            }
+            
+        });
+        if($cn_cn > 0){
+            return true;
+        }
+        return false
+    }
+    function loadRow_client(data){
+        $cn_fb = 0
+        $('#rsl-ClientTable > tbody').empty();
+        $.each(data, function(index, value){
+            $ci = value['CI'].split('-');
+            if($ci[0].toLowerCase() == 'pa'){
+                $ci[0].toLowerCase() = 'Pando';
+            }else if($ci[0] == 'be'){
+                $ci[0].toLowerCase() = 'Beni';
+            }else if($ci[0].toLowerCase() == 'lp'){
+                $ci[0] = 'La Paz';
+            }else if($ci[0].toLowerCase() == 'or'){
+                $ci[0] = 'Oruro';
+            }else if($ci[0].toLowerCase() == 'po'){
+                $ci[0] = 'Potosí';
+            }else if($ci[0].toLowerCase() == 'ta'){
+                $ci[0] = 'Tarija';
+            }else if($ci[0].toLowerCase() == 'ch'){
+                $ci[0].toLowerCase() = 'Chuquisaca';
+            }else if($ci[0].toLowerCase() == 'co'){
+                $ci[0] = 'Cochabamba';
+            }else if($ci[0].toLowerCase() == 'sa'){
+                $ci[0].toLowerCase() = 'Santa Cruz';
+            }else if($ci[0].toLowerCase() == 'ex'){
+                $ci[0] = 'Extranjero';
+            }
+            $('#rsl-ClientTable > tbody').append(
+                $('<tr>').append(
+                    $('<td>').attr('class', 'col s5').append(
+                        $('<span>').attr('id', 'client_' + value['ID']).text(value['nombre'] + ' ' + value['apellido_Paterno'] + ' ' + value['apellido_Materno']))
+                ).append(
+                    $('<td>').attr('class', 'col s2').append(
+                        $('<span>').attr('id', 'client-ci_' + value['ID']).attr('class', 'col s12').text($.trim($ci[1]))
+                    )
+                ).append(
+                    $('<td>').attr('class', 'col s2').append(
+                        $('<span>').attr('id', 'client-dp_' + value['ID']).attr('class', 'col s12').text($.trim($ci[0]))
+                    )
+                ).append(
+                    $('<td>').attr('class', 'col s3').append(
+                        $('<input>').attr('id', 'btnClient_' + value['ID']).attr('class', 'col s12 btnClientSelect').attr('type', 'button').attr('value', 'Select')
+                    )
+                )
+            );
+            $cn_fb = (index + 1)
+        });
+        if ($cn_fb > 0){
+            $('#rsl-ClientTable > tbody').append(
+                $('<tr>').append(
+                    $('<td>').attr('class', 'col s5')
+                ).append(
+                    $('<td>').attr('class', 'col s2')
+                ).append(
+                    $('<td>').attr('class', 'col s2')
+                ).append(
+                    $('<td>').attr('class', 'col s3').append(
+                        $('<input>').attr('id', 'btnBrand_Unselect').attr('class', 'col s12').attr('type', 'button').attr('value', 'Unselect')
+                    )
+                )
+            );  
+            
+        }
+    }
+    function loadRow_product(data){
+        $('#rsl-ProductTable > tbody').empty();
+        $.each(data, function(index, value){
+            $('#rsl-ProductTable > tbody').append(
+                $('<tr>').append(
+                    $('<td>').attr('class', 'col s2 center-align').append(
+                        $('<span>').attr('id', 'product_' + value['ID']).text(value['nombre']))
+                ).append(
+                    $('<td>').attr('class', 'col s1 center-align').append(
+                        $('<span>').attr('id', 'product-price_' + value['ID']).attr('class', 'col s12 rsl-addProduct-price').attr('p_cf', value['p_conFactura']).attr('p_sf', value['p_sinFactura']).attr('p_t', value['p_tecnico']).text('')
+                    )
+                ).append(
+                    $('<td>').attr('class', 'col s1 center-align').append(
+                        $('<span>').attr('id', 'product-wt_' + value['ID']).attr('class', 'col s12').text(value['garantia_Meses_Valido'])
+                    )
+                ).append(
+                    $('<td>').attr('class', 'col s2 center-align').append(
+                        $('<span>').attr('id', 'product-br_' + value['ID']).attr('class', 'col s12').text(value['Marca'])
+                    )
+                ).append(
+                    $('<td>').attr('class', 'col s2 center-align').append(
+                        $('<span>').attr('id', 'product-ca_' + value['ID']).attr('class', 'col s12').text(value['Categoria'])
+                    )
+                ).append(
+                    $('<td>').attr('class', 'col s2 center-align').append(
+                        $('<input>').attr('id', 'btnProduct_' + value['ID']).attr('class', 'col s12 btnProductSelect').attr('type', 'button').attr('value', 'Select')
+                    )
+                )
+            );
+        });
+        if($('#rsl-technical-check').prop('checked')){
+            t_price();
+        }else{
+            if($('#rsl-bill-check').prop('checked')){
+                cf_price();
+            }else{
+                sf_price();
+            }
+        }
+    }
+    $('.modal').modal({
+        dismissible: false, // Modal can be dismissed by clicking outside of the modal
+        opacity: 0, // Opacity of modal background
+        inDuration: 300, // Transition in duration
+        outDuration: 200, // Transition out duration
+        startingTop: '4%', // Starting top style attribute
+        endingTop: '10%', // Ending top style attribute
+        ready: function(modal, trigger) { // Callback for Modal open. Modal and trigger parameters available.
+          //empty
+        },
+        complete: function() {
+            //empty
+         } // Callback for Modal close
+      }
+    );
+    $('#register-Sales_AddClient').click(function(){
+        $('#add_Client').modal('open');
+    });
+
+    $('#rsl-addProduct').click(function(){
+        $('#add_Product').modal('open');
+    });
+
+    $('select').material_select();
+
+    $('#sl-cl-sci_field').keydown(function (e) {
+            if (e.keyCode == 109 || e.keyCode == 107) {
+                e.preventDefault();
+                return false;
+            }
+        });
+
+    $('#sl-cl-sci_field').keypress(function (e) {
+        var key = e.keyCode;
+        if (key == 101 || key == 46 || key == 43 || key == 45){
+            e.preventDefault();
+            return false;
+        }
+    });
+
+    $('#sl-cl-sFName_field').keydown(function (e) {
+        var key = e.keyCode;
+        if (e.ctrlKey || e.altKey) {
+            e.preventDefault();
+        } else {
+            if (!((key == 8) || (key == 32) || (key == 46) || (key >= 35 && key <= 40) || (key >= 65 && key <= 90))) {
+                e.preventDefault();
+            }
+        }
+    });
+
+    $("#sl-cl-sFName_field").keypress(function(e) {
+        var key = e.keyCode;
+        if (e.shiftKey){
+            if (!((key >= 65 && key <= 90)))  {   
+                e.preventDefault();
+                return;
+            }
+        }else{
+            if (!((key >= 97 && key <= 122) || key == 32))  { 
+                e.preventDefault();
+            return;
+            }
+        }
+    });
+
+    $('#rsl-cl-btn').click(function(){
+        if ($('#sl-cl-sFName_field').val().length > 0 || $('#sl-cl-sci_field').val().length > 0){
+            $.ajax({
+                url: '/request/cliente_var?fName=' + $('#sl-cl-sFName_field').val() + '&CI=' + $('#sl-cl-sci_field').val() + "&dep=" + $('#rsl-dd-dt').val(),
+                data: '',
+                type: 'GET',
+                success: function(data){
+                    loadRow_client(data)
+                },
+                error: function (error){
+                    $('#sl-cl-errMessage').text('Error 500.1');
+                }
+            });
+        }else{
+            $('#rsl-ClientTable > tbody').empty();
+        }
+    });
+
+    $('#rsl-pr-btn').click(function(){
+        $('#sl-pr-errMessage').text('');
+        if ($('#rsl-pr-sName_field').val().length > 0 || $('#rsl-pr-sBrand_field').val().length > 0 || $('#rsl-pr-sCategory_field').val().length > 0){
+            $.ajax({
+                url: '/request/producto_var?name=' + $('#rsl-pr-sName_field').val() + '&brand=' + $('#rsl-pr-sBrand_field').val() + "&category=" + $('#rsl-pr-sCategory_field').val(),
+                data: '',
+                type: 'GET',
+                success: function(data){
+                    loadRow_product(data);
+                },
+                error: function (error){
+                    $('#sl-pr-errMessage').text('Error 500.1');
+                }
+            });
+        }else{
+            $('#rsl-ProductTable > tbody').empty();
+        }
+    });
+
+    $('#btn_addClient_Cancel').click(function(){
+        $('#sl-cl-errMessage').text('');
+        $('#add_Client').modal('close');
+    });
+    
+    $('#btn_addProduct_Cancel').click(function(){
+        $('#sl-pr-errMessage').text('');
+        $('#add_Product').modal('close');
+    });
+
+    $('body').on('click', '.btnClientSelect', function(){
+        $('#rsl-sClient_field').val($('#client_' + $(this).attr('id').substr(10)).text() + ' -- ' + $('#client-dp_' + $(this).attr('id').substr(10)).text() + '/' + $('#client-ci_' + $(this).attr('id').substr(10)).text());
+        $('#add_Client').modal('close');
+    });
+    $('body').on('click', '.btnProductSelect', function(){
+        if(check_idProduct($(this).attr('id').substr(11))){
+            $('#sl-pr-errMessage').text('It is already added for sale');
+            return;
+        }
+        $this_current = $(this);
+        $cn_cn = 0;
+        $cn_fl = 0;
+        $data = [];
+        $data_tmp = [];
+        $loop_cn = $('#rsl-regSl > tbody > tr').find('td');
+        $loop_cn.each(function(index, value){
+            if ($(this).is(':empty')){
+                $data_tmp.push($(this));
+            }else{
+                $cn_fl = $cn_fl + 1
+            }
+            $cn_cn = $cn_cn + 1;
+            if($cn_cn > 4){
+                if($cn_fl == 0){
+                    $data.push($data_tmp);
+                }
+                $data_tmp = [];
+                $cn_fl = 0;
+                $cn_cn = 0;
+            }
+        });
+        $('body').on('input', '.rsl-prAmount', function(){
+            if($(this).val().length == 0){
+                $(this).val(0);
+            }else if($(this).val().length == 2 && $(this).val().substr(1) == 0){
+                $(this).val($(this).val().substr(1));
+            }else if($(this).val().substr(0,1) == 0){
+                $(this).val($(this).val().substr(1));
+            }
+            $old_price = $('#rsl-product-price_' + $(this).attr('id').substr(19));
+            updatePrice($old_price);
+            $old_price.text(parseFloat($old_price.text() * $(this).val()).toFixed(2));
+            updateTotal();
+        });
+        $('body').on('click', '.rsl-btn-deleteSelectProduct', function(){
+            $(this).parent('td').parent('tr').remove();
+            if($('#rsl-regSl > tbody > tr').length < 3){
+                $('#rsl-regSl > tbody').append(
+                    $('<tr>').append(
+                        $('<td>')
+                    ).append(
+                        $('<td>')
+                    ).append(
+                        $('<td>')
+                    ).append(
+                        $('<td>')
+                    ).append(
+                        $('<td>')
+                    )
+                );
+            }
+            updateTotal();
+        });
+        if($data.length > 0){
+            $data[0][0].attr('class', 'col s4 center-align').append($('<span>').attr('class', 'col s12').attr('id', 'rsl-product_' + $this_current.attr('id').substr(11)).text($('#product_' + $this_current.attr('id').substr(11)).text()));
+            $data[0][1].attr('class', 'col s2 center-align').append($('<span>').attr('class', 'col s12').attr('id', 'rsl-product-wt_' + $this_current.attr('id').substr(11)).text($('#product-wt_' + $this_current.attr('id').substr(11)).text()));
+            $data[0][2].attr('class', 'col s2 center-align').append($('<span>').attr('class', 'col s12 rsl-addProduct-price').attr('id', 'rsl-product-price_' + $this_current.attr('id').substr(11)).attr('p_cf', $('#product-price_' + $this_current.attr('id').substr(11)).attr('p_cf')).attr('p_sf', $('#product-price_' + $this_current.attr('id').substr(11)).attr('p_sf')).attr('p_t', $('#product-price_' + $this_current.attr('id').substr(11)).attr('p_t')));
+            $data[0][3].attr('class', 'col s2 center-align').append($('<input>').attr('class', 'col s12 rsl-prAmount').attr('type', 'number').attr('id', 'rsl-product-amount_' + $this_current.attr('id').substr(11)).attr('value', 1).attr('oninput', 'javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);').attr('maxlength', 3));
+            $data[0][4].attr('class', 'col s2 center-align').append($('<input>').attr('class', 'col s12 rsl-btn-deleteSelectProduct').attr('type', 'button').attr('id', 'rsl-btnProduct-delete_' + $this_current.attr('id').substr(11)).attr('value', 'Delete'));
+        }else{
+            $('#rsl-regSl > tbody').append(
+                $('<tr>').append(
+                    $('<td>').attr('class', 'col s4 center-align').append(
+                        $('<span>').attr('class', 'col s12').attr('id', 'rsl-product_' + $this_current.attr('id').substr(11)).text($('#product_' + $this_current.attr('id').substr(11)).text()))
+                ).append(
+                    $('<td>').attr('class', 'col s2 center-align').append(
+                        $('<span>').attr('class', 'col s12').attr('id', 'rsl-product-wt_' + $this_current.attr('id').substr(11)).text($('#product-wt_' + $this_current.attr('id').substr(11)).text()))
+                ).append(
+                    $('<td>').attr('class', 'col s2 center-align').append(
+                        $('<span>').attr('class', 'col s12 rsl-addProduct-price').attr('id', 'rsl-product-price_' + $this_current.attr('id').substr(11)).attr('p_cf', $('#product-price_' + $this_current.attr('id').substr(11)).attr('p_cf')).attr('p_sf', $('#product-price_' + $this_current.attr('id').substr(11)).attr('p_sf')).attr('p_t', $('#product-price_' + $this_current.attr('id').substr(11)).attr('p_t')))
+                ).append(
+                    $('<td>').attr('class', 'col s2 center-align').append(
+                        $('<input>').attr('class', 'col s12 rsl-prAmount').attr('type', 'number').attr('id', 'rsl-product-amount_' + $this_current.attr('id').substr(11)).attr('value', 1)).attr('oninput', 'javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);').attr('maxlength', 3)
+                ).append(
+                    $('<td>').attr('class', 'col s2 center-align').append(
+                        $('<input>').attr('class', 'col s12 rsl-btn-deleteSelectProduct').attr('type', 'button').attr('id', 'rsl-btnProduct-delete_' + $this_current.attr('id').substr(11)).attr('value', 'Delete'))
+                )
+            );
+        }
+        if($('#rsl-technical-check').prop('checked')){
+            t_price();
+        }else{
+            if($('#rsl-bill-check').prop('checked')){
+                cf_price();
+            }else{
+                sf_price();
+            }
+        }
+    }); 
+    $('#rsl-technical-check').change(function(e){
+        if($('#rsl-technical-check').prop('checked')){
+            $('#rsl-bill-check').prop('checked', false);
+            $('#rsl-bill-check').prop('disabled', true);
+            t_price();
+        }else{
+            sf_price();
+            $('#rsl-bill-check').prop('disabled', false);
+        }
+    });
+
+    $('#rsl-bill-check').change(function(e){
+        if($('#rsl-bill-check').prop('checked')){
+            cf_price();
+        }else{
+            sf_price();
+        }
+    });
+    $('#rsl-form').submit(function(e){
+        var $req_data = [];
+        var $dic_tmp = {};
+        $cn_cn = 0;
+        $('#rsl-regSl > tbody > tr > td').find('input, span').each(function(){
+
+            if('rsl-product_' == $(this).attr('id').substr(0, 12)){
+                $dic_tmp['name'] = $(this).text();
+                $cn_cn = $cn_cn + 1;
+            }
+            else if('rsl-product-wt_' == $(this).attr('id').substr(0, 15)){
+                $dic_tmp['wt'] = toString($(this).text());
+                $cn_cn = $cn_cn + 1;
+            }
+            else if('rsl-product-price_' == $(this).attr('id').substr(0, 18)){
+                $dic_tmp['price'] = toString($(this).text());
+                $cn_cn = $cn_cn + 1;
+            }
+            else if('rsl-product-amount_' == $(this).attr('id').substr(0, 19)){
+                $dic_tmp['amount'] = toString($(this).val());
+                $cn_cn = $cn_cn + 1;
+            }
+            if($cn_cn > 3){
+                $req_data.push($dic_tmp);
+                $dic_tmp = {};
+                $cn_cn = 0;
+            }
+        });
+        $.ajax({
+            url: '/variable/data',
+            data: { 
+                req_data : JSON.stringify($req_data)
+            },
+            type: 'POST',
+            success: function(data){
+                console.log(data);
+            },
+            error: function (error){
+                console.log(error);
+            }
+        });
+    });
+</script>
