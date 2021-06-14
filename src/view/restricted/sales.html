@@ -1,175 +1,209 @@
 {% extends "layout.html" %}
-{% block title %}Sales{% endblock %}
+{% block title %}Venta{% endblock %}
 {% block head %}
     {% include "component/css/css-sales.html" %}
 {% endblock %}
 {% block content %}
-    <div id="Container-Sales" class='container row valign-wrapper' >
+    <div id="Container-Sales" class='container row valign-wrapper' style="width: 100%;" >
         <div class='col s12 card-panel' style='width: 90%; padding: 0;' >
             <nav class="col s12 nav-extended transparent">
                 <div class="nav-content">
                     <ul class="tabs tabs-transparent">
-                        <li class="tab"><a class="active" href="#sl-register">Register</a></li>
-                        <li class="tab"><a  href="#sl-show">Show</a></li>
-                        <li class="tab disabled"><a href="#sl-modify">Modify</a></li>
-                        <li class="tab"><a href="#sl-delete">Delete</a></li>
+                        <li class="tab"><a class="active" href="#sl-register">Registrar</a></li>
+                        <li class="tab"><a  href="#sl-show">Buscar</a></li>
+                        <li class="tab disabled"><a href="#sl-modify">Modificar</a></li>
+                        <li class="tab"><a href="#sl-delete">Eliminar</a></li>
                     </ul>
                 </div>
             </nav>
 
             <div id="sl-register" class="col s12">
-                <h5 class='col s7 offset-s4 card-title blue-text' style="margin-top: 25px; margin-bottom: 20px;" >Register Sales</h5>
-                <div class="row">
-                    <form id="rsl-form" method="POST" action="/request/venta" class="col s12">
-                        <div class="row">
-                            <div class="input-field col s9 offset-s1">
-                                <i class="inp material-icons prefix">contacts</i>
-                                <input readonly placeholder="None" id="rsl-sClient_field" name='rsl-sClient_field' type="text" class="inp validate white-text blue accent-2">
-                                <label for="first_name">Client</label>
-                            </div>
-                            <a id="register-Sales_AddClient" style="padding: 0 !important;" ><i class="inp material-icons black-text waves-effect waves-light modal-trigger" style="margin-top: 40px !important;" >add_circle</i></a>
-                            <div id="add_Client" class="modal modal-fixed-footer">
-                                <div class="modal-content">
-                                    <h4 class="center-align" style="margin-bottom: 20px;" >Select Client</h4>
-                                    <p id='sl-cl-errMessage' class='col s11 offset-s1  red-text' ></p>
-                                    <div class="input-field col s10 offset-s1">
-                                        <input placeholder="None" id="sl-cl-sFName_field" type="text" class="inp validate white-text blue accent-2" maxlength="54" >
-                                        <label for="sl-cl-sFName_field">Search Full Name</label>
+                <div id='rsl-main-container'>
+                    <h5 class='col s7 offset-s4 card-title blue-text' style="margin-top: 25px; margin-bottom: 20px;" >Registrar Venta</h5>
+                    <div class="row">
+                        <p id='rsl-errMessage' class='col s11 offset-s1  red-text' ></p>
+                        <form id="rsl-form" method="POST" action="/request/venta" class="col s12">
+                            <div class="row">
+                                <div class="input-field col s9 offset-s1">
+                                    <i class="inp material-icons prefix">contacts</i>
+                                    <input readonly placeholder="Ninguno" id="rsl-sClient_field" name='rsl-sClient_field' type="text" class="inp validate white-text blue accent-2">
+                                    <label for="first_name">Cliente</label>
+                                </div>
+                                <a id="register-Sales_AddClient" style="padding: 0 !important;" ><i class="inp material-icons black-text waves-effect waves-light modal-trigger" style="margin-top: 40px !important;" >add_circle</i></a>
+                                <div id="add_Client" class="modal modal-fixed-footer">
+                                    <div class="modal-content">
+                                        <h4 class="center-align" style="margin-bottom: 20px;" >Seleccionar Cliente</h4>
+                                        <p id='sl-cl-errMessage' class='col s11 offset-s1  red-text' ></p>
+                                        <div class="input-field col s10 offset-s1">
+                                            <input placeholder="Ninguno" id="sl-cl-sFName_field" type="text" class="inp validate white-text blue accent-2" maxlength="54" >
+                                            <label for="sl-cl-sFName_field">Buscar Nombre Completo</label>
+                                        </div>
+                                        <div class="input-field col s5 offset-s1">
+                                            <input placeholder="Ninguno" id="sl-cl-sci_field" type="number" class="inp validate white-text blue accent-2" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" min="0" maxlength="16" >
+                                            <label for="sl-cl-sci_field">Buscar CI</label>
+                                        </div>
+                                        <div class="input-field col s5" style="margin-top: 35px;" >
+                                            <select id='rsl-dd-dt' name='dd-dt' >
+                                              <option value="pa">Pando</option>
+                                              <option value="be">Beni</option>
+                                              <option value="lp">La Paz</option>
+                                              <option value="or">Oruro</option>
+                                              <option value="po">Potosí</option>
+                                              <option value="ta">Tarija</option>
+                                              <option value="ch">Chuquisaca</option>
+                                              <option value="co">Cochabamba</option>
+                                              <option value="sa">Santa Cruz</option>
+                                              <option value="ex">Extranjero</option>
+                                            </select>
+                                            <label>Departamento</label>
+                                        </div>
+                                        <button id='rsl-cl-btn' class="col s3 offset-s5 btn grey lighten-2 light-blue-text" type="button" name="rpr-br-btn" style="margin-top: 10px; margin-bottom: 50px;" >Buscar</button>
+                                        <table id='rsl-ClientTable' class='col s10 offset-s1' >
+                                            <thead>
+                                                <tr>
+                                                    <th class='col s5 center-align' >Nombre Completo</th>
+                                                    <th class='col s2 center-align' >CI</th>
+                                                    <th class='col s2 center-align' >Departamento</th>
+                                                    <th class='col s3 center-align'  >Acción</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            </tbody>
+                                        </table>
                                     </div>
-                                    <div class="input-field col s5 offset-s1">
-                                        <input placeholder="None" id="sl-cl-sci_field" type="number" class="inp validate white-text blue accent-2" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" min="0" maxlength="16" >
-                                        <label for="sl-cl-sci_field">Search CI</label>
+                                    <div class="modal-footer">
+                                        <a id='btn_addClient_Cancel' href="#" class="modal-action modal-close waves-effect waves-green btn-flat">Cancelar</a>
                                     </div>
-                                    <div class="input-field col s5" style="margin-top: 35px;" >
-                                        <select id='rsl-dd-dt' name='dd-dt' >
-                                          <option value="pa">Pando</option>
-                                          <option value="be">Beni</option>
-                                          <option value="lp">La Paz</option>
-                                          <option value="or">Oruro</option>
-                                          <option value="po">Potosí</option>
-                                          <option value="ta">Tarija</option>
-                                          <option value="ch">Chuquisaca</option>
-                                          <option value="co">Cochabamba</option>
-                                          <option value="sa">Santa Cruz</option>
-                                          <option value="ex">Extranjero</option>
-                                        </select>
-                                        <label>Department</label>
-                                    </div>
-                                    <button id='rsl-cl-btn' class="col s3 offset-s5 btn grey lighten-2 light-blue-text" type="button" name="rpr-br-btn" style="margin-top: 10px; margin-bottom: 50px;" >Search</button>
-                                    <table id='rsl-ClientTable' class='col s10 offset-s1' >
-                                        <thead>
-                                            <tr>
-                                                <th class='col s5 center-align' >Full Name</th>
-                                                <th class='col s2 center-align' >CI</th>
-                                                <th class='col s2 center-align' >Department</th>
-                                                <th class='col s3 center-align'  >Action</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                        </tbody>
-                                    </table>
                                 </div>
-                                <div class="modal-footer">
-                                    <a id='btn_addClient_Cancel' href="#" class="modal-action modal-close waves-effect waves-green btn-flat">Cancel</a>
-                                </div>
-                            </div>
-                            <div class='col s12' style="margin-bottom: 20px;" >
-                                <div class="col s5 offset-s1 switch" style="padding: 0px;">
-                                    <label>
-                                        
-                                        <input id='rsl-bill-check' name='rsl-bill-check' type="checkbox">
-                                        <span class="lever"></span>
-                                        ADD BILL
-                                    </label>
-                                </div>
-                                <div class="col s5 offset-s1 switch" style="padding: 0px;">
-                                    <label>
-                                        
-                                        <input id='rsl-technical-check' name='rsl-technician-check' type="checkbox">
-                                        <span class="lever"></span>
-                                        Technical Price
-                                    </label>
-                                </div>
-                            </div>
-                            <table id="rsl-regSl" class="col s10 offset-s1 striped" style="margin-bottom: 30px;">
-                                <thead>
-                                  <tr>
-                                      <th class='col s4 center-align' style='font-size: 11px;' >Name</th>
-                                      <th class='col s2 center-align' style='font-size: 11px;' >Warranty time (months)</th>
-                                      <th class='col s2 center-align' style='font-size: 11px;' >Unit Price</th>
-                                      <th class='col s2 center-align' style='font-size: 11px;' >Amount</th>
-                                      <th class='col s2 center-align' style='font-size: 11px;' >Action</th>
-                                  </tr>
-                                </thead>
+                                <div class='col s12' style="margin-bottom: 20px;" >
+                                    <div class="col s5 offset-s1 switch" style="padding: 0px;">
+                                        <label>
 
-                                <tbody>
-                                  <tr>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                  </tr>
-                                  <tr>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                  </tr>
-                                  <tr>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                  </tr>
-                                </tbody>
-                            </table>
-                            <div class="col s5 offset-s1">
-                            <h5>Total: <input readonly class="col s5" type=text id="rsl-result-totalPrice" name='rsl-result-totalPrice' value="0" ></input> Bs</h5>
-                            </div>
-                            
-                            <a id='rsl-addProduct' class="col s3 offset-s2 waves-effect waves-light btn grey lighten-2 black-text modal-trigger" style="margin-top: 10px; height: 5px !important; line-height: 50px;" >ADD PRODUCT</a>
-                            <div id="add_Product" class="modal modal-fixed-footer">
-                                <div class="modal-content">
-                                    <h4 class="center-align" style="margin-bottom: 20px;" >Select Product</h4>
-                                    <p id='sl-pr-errMessage' class='col s11 offset-s1  red-text' ></p>
-                                    <div class="input-field col s4 offset-s1" >
-                                        <input placeholder="None" id="rsl-pr-sName_field" name='rsl-pr-sName_field' type="text" class="inp validate white-text blue accent-2" maxlength="52" >
-                                        <label for="sl-pr-sName_field">Search Name</label>
+                                            <input id='rsl-bill-check' name='rsl-bill-check' type="checkbox">
+                                            <span class="lever"></span>
+                                            Con Factura
+                                        </label>
                                     </div>
-                                    <div class="input-field col s6 " >
-                                        <input placeholder="None" id="rsl-pr-sBrand_field" type="text" class="inp validate white-text blue accent-2" maxlength="42" >
-                                        <label for="sl-pr-sName_field">Serach Brand</label>
+                                    <div class="col s5 offset-s1 switch" style="padding: 0px;">
+                                        <label>
+
+                                            <input id='rsl-technical-check' name='rsl-technician-check' type="checkbox">
+                                            <span class="lever"></span>
+                                            Precio Técnico
+                                        </label>
                                     </div>
+                                </div>
+                                <div class='col s12' >
                                     <div class="input-field col s5 offset-s1" >
-                                        <input placeholder="None" id="rsl-pr-sCategory_field" type="text" class="inp validate white-text blue accent-2" maxlength="42" >
-                                        <label for="sl-pr-sName_field">Search Category</label>
+                                        <input placeholder="Ninguno" id="rsl-pr-sNIT_field" name='rsl-pr-sNIT_field' type="number" class="inp validate white-text blue accent-2" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" min="0" maxlength="16" >
+                                        <label for="sl-pr-sName_field">NIT</label>
                                     </div>
-                                    <button id='rsl-pr-btn' class="col s3 btn grey lighten-2 light-blue-text" type="button" name="rpr-br-btn" style="margin-top: 40px; margin-bottom: 50px;" >Search</button>
-                                    <table id='rsl-ProductTable' class='col s12' >
-                                        <thead>
-                                            <tr>
-                                                <th class='col s2 center-align' >Name</th>
-                                                <th class='col s1 center-align' >Unit Price</th>
-                                                <th class='col s1 center-align' >Warranty time (Months)</th>
-                                                <th class='col s2 center-align' >Brand</th>
-                                                <th class='col s2 center-align' >Category</th>
-                                                <th class='col s2 center-align'  >Action</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                        </tbody>
-                                    </table>
+                                    <div class="input-field col s5" >
+                                        <input placeholder="Ninguno" id="rsl-pr-sRSocial_field" name="rsl-pr-sRSocial_field" type="text" class="inp validate white-text blue accent-2" maxlength="45" >
+                                        <label for="sl-pr-sName_field">razon Social</label>
+                                    </div>
                                 </div>
-                                <div class="modal-footer">
-                                    <a id='btn_addProduct_Cancel' href="#" class="modal-action modal-close waves-effect waves-green btn-flat">Cancel</a>
+                                <table id="rsl-regSl" class="col s10 offset-s1 striped" style="margin-bottom: 30px;">
+                                    <thead>
+                                      <tr>
+                                          <th class='col s4 center-align' style='font-size: 11px;' >Nombre</th>
+                                          <th class='col s2 center-align' style='font-size: 11px;' >Tiempo de Garantía (months)</th>
+                                          <th class='col s2 center-align' style='font-size: 11px;' >Precio Unitario</th>
+                                          <th class='col s2 center-align' style='font-size: 11px;' >Cantidad</th>
+                                          <th class='col s2 center-align' style='font-size: 11px;' >Acción</th>
+                                      </tr>
+                                    </thead>
+
+                                    <tbody>
+                                      <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                      </tr>
+                                      <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                      </tr>
+                                      <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                      </tr>
+                                    </tbody>
+                                </table>
+                                <div class="col s5 offset-s1">
+                                <h5>Total: <input readonly class="col s5" type=text id="rsl-result-totalPrice" name='rsl-result-totalPrice' value="0" ></input> Bs</h5>
                                 </div>
+
+                                <a id='rsl-addProduct' class="col s3 offset-s2 waves-effect waves-light btn grey lighten-2 black-text modal-trigger" style="margin-top: 10px; height: 5px !important; line-height: 50px; font-size: 10px;" >Agregar Producto</a>
+                                <div id="add_Product" class="modal modal-fixed-footer">
+                                    <div class="modal-content">
+                                        <h4 class="center-align" style="margin-bottom: 20px;" >Seleccionar Producto</h4>
+                                        <p id='sl-pr-errMessage' class='col s11 offset-s1  red-text' ></p>
+                                        <div class="input-field col s4 offset-s1" >
+                                            <input placeholder="Ninguno" id="rsl-pr-sName_field" name='rsl-pr-sName_field' type="text" class="inp validate white-text blue accent-2" maxlength="52" >
+                                            <label for="sl-pr-sName_field">Buscar Nombre</label>
+                                        </div>
+                                        <div class="input-field col s6 " >
+                                            <input placeholder="Ninguno" id="rsl-pr-sBrand_field" type="text" class="inp validate white-text blue accent-2" maxlength="42" >
+                                            <label for="sl-pr-sName_field">Buscar Marca</label>
+                                        </div>
+                                        <div class="input-field col s5 offset-s1" >
+                                            <input placeholder="Ninguno" id="rsl-pr-sCategory_field" type="text" class="inp validate white-text blue accent-2" maxlength="42" >
+                                            <label for="sl-pr-sName_field">Buscar Categoria</label>
+                                        </div>
+                                        <button id='rsl-pr-btn' class="col s3 btn grey lighten-2 light-blue-text" type="button" name="rpr-br-btn" style="margin-top: 40px; margin-bottom: 50px;" >Buscar</button>
+                                        <table id='rsl-ProductTable' class='col s12' >
+                                            <thead>
+                                                <tr>
+                                                    <th class='col s3 center-align' >nombre</th>
+                                                    <th class='col s1 center-align' >Precio Unitario</th>
+                                                    <th class='col s1 center-align' >Cantidad</th>
+                                                    <th class='col s1 center-align' >Garantía</th>
+                                                    <th class='col s2 center-align' >Marca</th>
+                                                    <th class='col s2 center-align' >Categoria</th>
+                                                    <th class='col s2 center-align'  >Acción</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <a id='btn_addProduct_Cancel' href="#" class="modal-action modal-close waves-effect waves-green btn-flat">Cancelar</a>
+                                    </div>
+                                </div>
+                                <button id='rsl-btnContinue' class="col s8 offset-s2 btn grey lighten-2 light-blue-text" type="button" name="action" style="margin-top: 20px; line-height: 30px; " >Confirmar</button>
                             </div>
-                            <button id='rsl-submit' class="col s8 offset-s2 btn grey lighten-2 light-blue-text" type="submit" name="action" style="margin-top: 20px; line-height: 30px; " >CONFIRM</button>
-                        </div>
-                    </form>
+                        </form>
+                    </div>
+                </div>
+                <div id='rsl-second-container' >
+                    <div class='col s12'>
+                        <a id="rsl-arrowBack-second" style="position: absolute;" ><i class="inp material-icons black-text waves-effect waves-light modal-trigger" >arrow_back</i></a>
+                        <h5 class='col s7 offset-s4 card-title blue-text' style="margin-top: 25px; margin-bottom: 20px;" >Registrar Garantia</h5>
+                    </div>
+                    <p id='rsl-wt-errMessage' class='col s11 offset-s1  red-text' ></p>
+                    <table id="rsl-asWr" class="col s10 offset-s1 striped" style="margin-bottom: 30px;">
+                        <thead>
+                          <tr>
+                              <th class='col s6 center-align' >Nombre</th>
+                              <th class='col s3 center-align' >Codigo de Fabrica</th>
+                              <th class='col s3 center-align' >Fecha de Vencimiento</th>
+                          </tr>
+                        </thead>
+
+                        <tbody>
+                        </tbody>
+                    </table>
+                    <button id='rsl-submit' class="col s8 offset-s2 btn grey lighten-2 light-blue-text" type="button" name="action" style="margin-top: 20px; margin-bottom: 30px;  line-height: 30px; " >Registrar</button>
                 </div>
             </div>
             <div id="sl-show" class="col s12">Show</div>

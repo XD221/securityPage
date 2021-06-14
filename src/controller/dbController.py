@@ -95,7 +95,7 @@ class Empleado(mysql.Model):
     ID = mysql.Column(mysql.Integer, primary_key=True)
     estado = mysql.Column(mysql.Integer, nullable=False)
     id_Persona = mysql.Column(mysql.Integer, mysql.ForeignKey('persona.ID'), nullable=False)
-    id_TipoEmpleado = mysql.Column(mysql.Integer, mysql.ForeignKey('tipo_Empleado.ID'), nullable=False)
+    id_TipoEmpleado = mysql.Column(mysql.Integer, mysql.ForeignKey('tipo_empleado.ID'), nullable=False)
     id_Sucursal = mysql.Column(mysql.Integer, mysql.ForeignKey('sucursal.ID'), nullable=False)
     
     def __init__(self, estado, id_Persona, id_TipoEmpleado, id_Sucursal):
@@ -330,7 +330,7 @@ class Producto_vendido(mysql.Model):
 
 class GarantiaSchema(ma.Schema):
     class Meta:
-        fields = ('ID', 'COD_Fabrica_Producto', 'fecha_Registro', 'fecha_Vencimiento', 'descripcion', 'estado', 'id_Venta', 'id_Producto')
+        fields = ('ID', 'COD_Fabrica_Producto', 'fecha_Registro', 'fecha_Vencimiento', 'estado', 'id_Venta', 'id_Producto')
         
 garantia_schema_single = GarantiaSchema()
 garantia_schema_multiple = GarantiaSchema(many=True)
@@ -340,16 +340,14 @@ class Garantia(mysql.Model):
     COD_Fabrica_Producto = mysql.Column(mysql.String(45), nullable=False)
     fecha_Registro = mysql.Column(mysql.Date(), nullable=False)
     fecha_Vencimiento = mysql.Column(mysql.Integer, nullable=False)
-    descripcion = mysql.Column(mysql.String(50), nullable=False)
     estado = mysql.Column(mysql.Integer, nullable=False)
     id_Venta = mysql.Column(mysql.Integer, mysql.ForeignKey('venta.ID'), nullable=False)
     id_Producto = mysql.Column(mysql.Integer, mysql.ForeignKey('producto.ID'), nullable=False)
     
-    def __init__(self, COD_Fabrica_Producto, fecha_Registro, fecha_Vencimiento, descripcion, estado, id_Venta, id_Producto):
+    def __init__(self, COD_Fabrica_Producto, fecha_Registro, fecha_Vencimiento, estado, id_Venta, id_Producto):
         self.COD_Fabrica_Producto = COD_Fabrica_Producto
         self.fecha_Registro = fecha_Registro
         self.fecha_Vencimiento = fecha_Vencimiento
-        self.descripcion = descripcion
         self.estado = estado
         self.id_Venta = id_Venta
         self.id_Producto = id_Producto
@@ -361,14 +359,14 @@ class Garantia(mysql.Model):
 
 #--------Producto_Devuelto--------
 
-class Producto_DevueltoSchema(ma.Schema):
+class Producto_devueltoSchema(ma.Schema):
     class Meta:
         fields = ('ID', 'descripcion', 'id_Garantia', 'id_Producto')
         
-producto_devuelto_schema_single = Producto_DevueltoSchema()
-producto_devuelto_schema_multiple = Producto_DevueltoSchema(many=True)
+producto_devuelto_schema_single = Producto_devueltoSchema()
+producto_devuelto_schema_multiple = Producto_devueltoSchema(many=True)
 
-class Producto_Devuelto(mysql.Model):
+class Producto_devuelto(mysql.Model):
     ID = mysql.Column(mysql.Integer, primary_key=True)
     descripcion = mysql.Column(mysql.String(60), nullable=False)
     id_Garantia = mysql.Column(mysql.Integer, mysql.ForeignKey('garantia.ID'), nullable=False)
@@ -434,14 +432,14 @@ class Permiso(mysql.Model):
 
 #--------Permiso_Asignado---------
 
-class Permiso_AsignadoSchema(ma.Schema):
+class Permiso_asignadoSchema(ma.Schema):
     class Meta:
         fields = ('estado', 'id_Permiso', 'id_Cuenta')
         
-permiso_asignado_schema_single = Permiso_AsignadoSchema()
-permiso_asignado_schema_multiple = Permiso_AsignadoSchema(many=True)
+permiso_asignado_schema_single = Permiso_asignadoSchema()
+permiso_asignado_schema_multiple = Permiso_asignadoSchema(many=True)
 
-class Permiso_Asignado(mysql.Model):
+class Permiso_asignado(mysql.Model):
     estado = mysql.Column(mysql.Integer, nullable=False)
     id_Permiso = mysql.Column(mysql.Integer, mysql.ForeignKey('permiso.ID'), primary_key=True)
     id_Cuenta = mysql.Column(mysql.Integer, mysql.ForeignKey('cuenta.ID'), primary_key=True)
@@ -452,7 +450,32 @@ class Permiso_Asignado(mysql.Model):
         self.id_Cuenta = id_Cuenta
         
     def __repr__(self):
-        return '<Permiso_Asignado estado=$r>' % self.estado
+        return '<Permiso_Asignado estado=%r>' % self.estado
+
+#---------------------------------
+
+#-------------Factura-------------
+
+class FacturaSchema(ma.Schema):
+    class Meta:
+        fields = ('NRO', 'NIT', 'razon_Social', 'id_Venta')
+    
+factura_schema_single = FacturaSchema()
+factura_schema_multiple = FacturaSchema(many=True)
+
+class Factura(mysql.Model):
+    NRO = mysql.Column(mysql.Integer, primary_key=True)
+    NIT = mysql.Column(mysql.Integer, nullable=False)
+    razon_Social = mysql.Column(mysql.String(45), nullable=False)
+    id_Venta = mysql.Column(mysql.Integer, nullable=False)
+    
+    def __init__(self, NIT, razon_Social, id_Venta):
+        self.NIT = NIT
+        self.razon_Social = razon_Social
+        self.id_Venta = id_Venta
+        
+    def __repr__(self):
+        return '<Factura NIT=%r>' % self.NIT
 
 #---------------------------------
 

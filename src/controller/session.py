@@ -71,14 +71,14 @@ def logout():
     return
 
 # Get Variable 
-def getPermission():
-    global sess_global
-    if (not sess_global['login']):
-        if len(sess_global['permission']) == 0:
-            permission = Permiso_Asignado.query.filter_by(id_Cuenta = sess_global['user_id'], estado = 0).first()
-            permission = getArrayColumn('id_Permiso', permission)
-        return permission
-    return []
+#def getPermission():
+#    global sess_global
+#    if (not sess_global['login']):
+#        if len(sess_global['permission']) == 0:
+#            permission = Permiso_Asignado.query.filter_by(id_Cuenta = sess_global['user_id'], estado = 0).first()
+#            permission = getArrayColumn('id_Permiso', permission)
+#        return permission
+#    return []
 
 def getArrayColumn(column_name, data):
     result = []
