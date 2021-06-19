@@ -1,5 +1,70 @@
 <script type='text/javascript'>
-    function loadRow_client(data){
+    $('#mcl-nit_field').attr('class', 'inp validate white-text pink accent-3');
+    $('#mcl-rSocial_field').attr('class', 'inp validate white-text pink accent-3');
+    function mcl_loadRow_client(data){
+        var $cn_fb = 0;
+        $('#mcl-tClient > tbody').empty();
+        $.each(data, function(index, value){
+            $ci = value['CI'].split('-');
+            if($ci[0].toLowerCase() == 'pa'){
+                $ci[0] = 'Pando';
+            }else if($ci[0] == 'be'){
+                $ci[0] = 'Beni';
+            }else if($ci[0].toLowerCase() == 'lp'){
+                $ci[0] = 'La Paz';
+            }else if($ci[0].toLowerCase() == 'or'){
+                $ci[0] = 'Oruro';
+            }else if($ci[0].toLowerCase() == 'po'){
+                $ci[0] = 'Potosí';
+            }else if($ci[0].toLowerCase() == 'ta'){
+                $ci[0] = 'Tarija';
+            }else if($ci[0].toLowerCase() == 'ch'){
+                $ci[0] = 'Chuquisaca';
+            }else if($ci[0].toLowerCase() == 'co'){
+                $ci[0] = 'Cochabamba';
+            }else if($ci[0].toLowerCase() == 'sa'){
+                $ci[0] = 'Santa Cruz';
+            }else if($ci[0].toLowerCase() == 'ex'){
+                $ci[0] = 'Extranjero';
+            }else if($ci[0].toLowerCase() == 'nu'){
+                $ci[0] = 'Ninguno'
+            }
+            $('#mcl-tClient > tbody').append(
+                $('<tr>').attr('class', 'mcl-tClient-row').append(
+                    $('<td>').attr('class', 'col s3 center-align').append(
+                        $('<span>').attr('id', 'mcl-client-ci_' + value['ID']).attr('class', 'col s12').text($.trim($ci[1]))
+                    )
+                ).append(
+                    $('<td>').attr('class', 'col s5 center-align').append(
+                        $('<span>').attr('id', 'mcl-client_' + value['ID']).attr('class', 'col s12').text(value['nombre'] + ' ' + value['apellido_Paterno'] + ' ' + value['apellido_Materno']).attr('nit', value['NIT']).attr('rz_S', value['razon_Social']))
+                ).append(
+                    $('<td>').attr('class', 'col s4 center-align').append(
+                        $('<span>').attr('id', 'mcl-client-dp_' + value['ID']).attr('class', 'col s12').text($.trim($ci[0]))
+                    )
+                )
+            );
+            $cn_fb = (index + 1);
+        });
+        if($cn_fb < 3){
+            var $cn_for = 3 - $cn_fb;
+            for(var i = 0; i < $cn_for; i++){
+                $('#mcl-tClient > tbody').append(
+                    $('<tr>').attr('class', 'col s12').append(
+                        $('<td>')
+                    ).append(
+                        $('<td>')
+                    ).append(
+                        $('<td>')
+                    ).append(
+                        $('<td>')
+                    ).append(
+                        $('<td>')
+                    )
+                );
+            }
+        }
+    }
+    function bcl_loadRow_client(data){
         var $cn_fb = 0;
         $('#bcl-tClient > tbody').empty();
         $.each(data, function(index, value){
@@ -30,22 +95,22 @@
             $('#bcl-tClient > tbody').append(
                 $('<tr>').append(
                     $('<td>').attr('class', 'col s2 center-align').append(
-                        $('<span>').attr('id', 'client-ci_' + value['ID']).attr('class', 'col s12').text($.trim($ci[1]))
+                        $('<span>').attr('id', 'bcl-client-ci_' + value['ID']).attr('class', 'col s12').text($.trim($ci[1]))
                     )
                 ).append(
                     $('<td>').attr('class', 'col s4 center-align').append(
-                        $('<span>').attr('id', 'client_' + value['ID']).attr('class', 'col s12').text(value['nombre'] + ' ' + value['apellido_Paterno'] + ' ' + value['apellido_Materno']))
+                        $('<span>').attr('id', 'bcl-client_' + value['ID']).attr('class', 'col s12').text(value['nombre'] + ' ' + value['apellido_Paterno'] + ' ' + value['apellido_Materno']))
                 ).append(
                     $('<td>').attr('class', 'col s2 center-align').append(
-                        $('<span>').attr('id', 'client-dp_' + value['ID']).attr('class', 'col s12').text($.trim($ci[0]))
+                        $('<span>').attr('id', 'bcl-client-dp_' + value['ID']).attr('class', 'col s12').text($.trim($ci[0]))
                     )
                 ).append(
                     $('<td>').attr('class', 'col s2  center-align').append(
-                        $('<span>').attr('id', 'btnClient-nit_' + value['ID']).attr('class', 'col s12').text(value['NIT'])
+                        $('<span>').attr('id', 'bcl-btnClient-nit_' + value['ID']).attr('class', 'col s12').text(value['NIT'])
                     )
                 ).append(
                     $('<td>').attr('class', 'col s2 center-align').append(
-                        $('<span>').attr('id', 'btnClient-rS_' + value['ID']).attr('class', 'col s12').text(value['razon_Social'])
+                        $('<span>').attr('id', 'bcl-btnClient-rS_' + value['ID']).attr('class', 'col s12').text(value['razon_Social'])
                     )
                 )
             );
@@ -54,20 +119,20 @@
         if($cn_fb < 3){
             var $cn_for = 3 - $cn_fb;
             for(var i = 0; i < $cn_for; i++){
-            $('#bcl-tClient > tbody').append(
-                $('<tr>').attr('class', 'col s12').append(
-                    $('<td>')
-                ).append(
-                    $('<td>')
-                ).append(
-                    $('<td>')
-                ).append(
-                    $('<td>')
-                ).append(
-                    $('<td>')
-                )
-            );
-        }
+                $('#bcl-tClient > tbody').append(
+                    $('<tr>').attr('class', 'col s12').append(
+                        $('<td>')
+                    ).append(
+                        $('<td>')
+                    ).append(
+                        $('<td>')
+                    ).append(
+                        $('<td>')
+                    ).append(
+                        $('<td>')
+                    )
+                );
+            }
         }
     }
     $(document).ready(function() {
@@ -161,7 +226,7 @@
                 data: '',
                 type: 'GET',
                 success: function(data){
-                    loadRow_client(data)
+                    bcl_loadRow_client(data)
                 },
                 error: function (error){
                     $('#sl-cl-errMessage').text('Error 500.1');
@@ -169,6 +234,115 @@
             });
             
         });
+        
+        $('#mcl-cl-btn').click(function(){
+            $.ajax({
+                url: '/request/cliente_var?fName=' + $('#mcl-pNameC_field').val() + '&CI=' + $('#mcl-pCI_field').val() + "&dep=" + $('#mcl-dd-dt').val(),
+                data: '',
+                type: 'GET',
+                success: function(data){
+                    mcl_loadRow_client(data)
+                },
+                error: function (error){
+                    $('#sl-cl-errMessage').text('Error 500.1');
+                }
+            });
+        });
+        $('body').on('click', '.mcl-tClient-row', function(){
+            $(this).find('span').each(function(){
+                if('mcl-client_' + $(this).attr('id').substr(11) == $(this).attr('id')){
+                    $('#mcl-nit_field').attr('mcl-id', parseInt($(this).attr('id').substr(11))).val($(this).attr('nit'));
+                    $('#mcl-rSocial_field').val($(this).attr('rz_S'));
+                    $('#mcl-nit_field').attr('class', 'inp validate white-text blue accent-2').prop('disabled', false);
+                    $('#mcl-rSocial_field').attr('class', 'inp validate white-text blue accent-2').prop('disabled', false);
+                    $('#mcl-cl-btnModify').prop('disabled', false);
+                }
+                
+            });
+            $('#mcl-cl-btnModify').click(function(){
+                $.ajax({
+                    url: '/request/cliente/' + $('#mcl-nit_field').attr('mcl-id'),
+                    data: { 
+                        'NIT' : JSON.stringify(parseInt($('#mcl-nit_field').val())),
+                        'razon_Social' : JSON.stringify($('#mcl-rSocial_field').val())
+                    },
+                    type: 'PUT',
+                    success: function(data){
 
+                    },
+                    error: function (error){
+
+                    }
+                });
+                $('#mcl-nit_field').attr('class', 'inp validate white-text pink accent-3').attr('mcl-id', '').prop('disabled', true).val('');
+                $('#mcl-rSocial_field').attr('class', 'inp validate white-text pink accent-3').prop('disabled', true).val('');
+                $('#mcl-tClient > tbody').empty();
+                for(var i = 0; i < 3; i++){
+                $('#mcl-tClient > tbody').append(
+                    $('<tr>').attr('class', 'col s12').append(
+                        $('<td>')
+                    ).append(
+                        $('<td>')
+                    ).append(
+                        $('<td>')
+                    ).append(
+                        $('<td>')
+                    ).append(
+                        $('<td>')
+                    )
+                );
+            }
+            });
+        });
+    });
+    $('#nc-submit').click(function(){
+        if($('#ci_field').val() == ''){
+            $('#rcl-message').text('Rellene el campo CI');
+            return;
+        }else if($('#dd-dt').val() == ''){
+            $('#rcl-message').text('Elija un Departamento');
+            return;
+        }else if($('#name_field').val() == ''){
+            $('#rcl-message').text('Rellene el campo Nombre');
+            return;
+        }else if($('#fLast_field').val() == ''){
+            $('#rcl-message').text('Rellene el campo Apellido Paterno');
+            return;
+        }else if($('#mLast_field').val() == ''){
+            $('#rcl-message').text('Rellene el campo Apellido Materno');
+            return;
+        }else if($('#sex_field').val() == ''){
+            $('#rcl-message').text('Elija el sexo');
+            return;
+        }else if($('#pNumber_field').val() == ''){
+            $('#rcl-message').text('Rellene el campo Número de telefono / celular');
+            return;
+        }else if($('#email_field').val() == ''){
+            $('#rcl-message').text('Rellene el campo Email');
+            return;
+        }else if($('#dBirth_field').val() == ''){
+            $('#rcl-message').text('Rellene el campo Fecha de Nacimiento');
+            return;
+        }else{
+            $('#rcl-message').text('');
+        }
+        var $inf_cl_exist = [];
+        $.ajax({
+            url: '/request/persona_var?fName=&CI=' + $('#ci_field').val() + "&dep=" + $('#dd-dt').val(),
+            data: '',
+            async: false,
+            type: 'GET',
+            success: function(data){
+                $inf_cl_exist = data;
+            },
+            error: function (error){
+                $('#rcl-message').text('Error 500.1');
+            }
+        });
+        if($inf_cl_exist.length != 0){
+            $('#rcl-message').text('El cliente ya esta registrado');
+            return;
+        }
+        $('#rcl-form').submit();
     });
 </script>

@@ -140,6 +140,33 @@ def req_get_persona_select(number):
     res_persona = Persona.query.get(number)
     return persona_schema_single.jsonify(res_persona)
 
+@app.route('/request/persona_var', methods=['GET'])
+def req_get_persona_var():
+    if isLogging():
+        req_nomComp = request.args.get('fName')
+        if req_nomComp is None:
+            req_nomComp = ''
+        else:
+            req_nomComp = "%{}%".format(req_nomComp)
+        req_ci = request.args.get('CI')
+        if req_ci is None:
+            req_ci = ''
+        else:
+            req_ci = "%{}%".format(req_ci)
+        req_dep = str(request.args.get('dep')).upper()
+        if req_dep is None:
+            req_dep = ''
+        else:
+            req_dep = "%{}%".format(req_dep)
+        req_data = mysql.session.query(Persona.ID, Persona.nombre, Persona.apellido_Paterno, Persona.apellido_Materno, Persona.CI).filter(((Persona.nombre.like(req_nomComp)) | (Persona.apellido_Paterno.like(req_nomComp)) | (Persona.apellido_Materno.like(req_nomComp))), Persona.CI.like(req_dep), Persona.CI.like(req_ci)).limit(10).all()
+        result = []
+        for persona in req_data:
+            content = {'ID': persona.ID, 'CI': persona.CI, 'nombre': persona.nombre, 'apellido_Paterno': persona.apellido_Paterno, 'apellido_Materno': persona.apellido_Materno}
+            result.append(content)
+        return jsonify(result)
+    else:
+        return redirect("/login", code=302)
+
 #@app.route('/request/persona', methods=['POST'])
 #def req_post_persona():
 #    try:
@@ -332,17 +359,20 @@ def req_post_cuenta():
 #------------------Cliente---------------------
 @app.route('/request/cliente/<number>', methods=['PUT'])
 def req_put_cliente(number):
-    res_cliente = Cliente.query.filter_by(ID=number).first()
-    if request.form is None or res_cliente is None:
+    if isLogging():
+        res_cliente = Cliente.query.filter_by(ID=number).first()
+        if request.form is None or res_cliente is None:
+            return "False"
+        if 'NIT' in request.form.keys():
+            res_cliente.NIT = json.loads(request.form.get('NIT'))
+        if 'razon_Social' in request.form.keys():
+            res_cliente.razon_Social = json.loads(request.form.get('razon_Social'))
+        #if 'id_Persona' in request.form.keys():
+        #    res_cliente.id_Persona = request.form['id_Persona']
+        mysql.session.commit()
+        return "True"
+    else:
         return "False"
-    if 'NIT' in request.form.keys():
-        res_cliente.NIT = request.form['NIT']
-    if 'razon_Social' in request.form.keys():
-        res_cliente.razon_Social = request.form['razon_Social']
-    #if 'id_Persona' in request.form.keys():
-    #    res_cliente.id_Persona = request.form['id_Persona']
-    mysql.session.commit()
-    return "True"
 
 @app.route('/request/cliente', methods=['GET'])
 def req_get_cliente():
@@ -368,7 +398,7 @@ def req_get_cliente_var():
             req_ci = ''
         else:
             req_ci = "%{}%".format(req_ci)
-        req_dep = request.args.get('dep')
+        req_dep = str(request.args.get('dep')).upper()
         if req_dep is None:
             req_dep = ''
         else:
@@ -712,37 +742,44 @@ def req_post_venta():
         elif tiene_Fac[0] == 'on':
             tiene_Fac = True
         estado = 0
-        data_Client = str(request.form['rsl-sClient_field']).split(sep="--", maxsplit=1)
-        data_CI = data_Client[1].strip().split(sep="/", maxsplit=1)
-        if data_CI[0].lower() == 'pando':
-            data_CI[0] = 'pa'
-        elif data_CI[0].lower() == 'beni':
-            data_CI[0] = 'be'
-        elif data_CI[0].lower() == 'la paz':
-            data_CI[0] = 'lp'
-        elif data_CI[0].lower() == 'oruro':
-            data_CI[0] = 'or'
-        elif data_CI[0].lower() == 'potosí':
-            data_CI[0] = 'po'
-        elif data_CI[0].lower() == 'tarija':
-            data_CI[0] = 'ta'
-        elif data_CI[0].lower() == 'chuquisaca':
-            data_CI[0] = 'ch'
-        elif data_CI[0].lower() == 'cochabamba':
-            data_CI[0] = 'co'
-        elif data_CI[0].lower() == 'santa cruz':
-            data_CI[0] = 'sa'
-        elif data_CI[0].lower() == 'extranjero':
-            data_CI[0] = 'ex'
-        elif data_CI[0].lower() == 'ninguno':
-            data_CI[0] = 'nu'
+        data_Client = str(request.form['rsl-sClient_field'])
+        req_Client = None
+        if(data_Client.lower() == 'anonimo'):
+            req_Client = mysql.session.query(Cliente, Persona.nombre, Persona.apellido_Paterno, Persona.apellido_Materno, Persona.CI).filter(Cliente.ID == 1).first()
+            if req_Client is None:
+                return "False"
         else:
-            return "False"
-        data_CI[0] = data_CI[0].upper()
-        data_CI = data_CI[0] + '-' + data_CI[1]
-        req_Client = mysql.session.query(Cliente, Persona.nombre, Persona.apellido_Paterno, Persona.apellido_Materno, Persona.CI).filter(Cliente.id_Persona == Persona.ID, Persona.CI == data_CI).first()
-        if req_Client is None:
-            return "False"
+            data_Client = data_Client.split(sep="--", maxsplit=1)
+            data_CI = data_Client[1].strip().split(sep="/", maxsplit=1)
+            if data_CI[0].lower() == 'pando':
+                data_CI[0] = 'pa'
+            elif data_CI[0].lower() == 'beni':
+                data_CI[0] = 'be'
+            elif data_CI[0].lower() == 'la paz':
+                data_CI[0] = 'lp'
+            elif data_CI[0].lower() == 'oruro':
+                data_CI[0] = 'or'
+            elif data_CI[0].lower() == 'potosí':
+                data_CI[0] = 'po'
+            elif data_CI[0].lower() == 'tarija':
+                data_CI[0] = 'ta'
+            elif data_CI[0].lower() == 'chuquisaca':
+                data_CI[0] = 'ch'
+            elif data_CI[0].lower() == 'cochabamba':
+                data_CI[0] = 'co'
+            elif data_CI[0].lower() == 'santa cruz':
+                data_CI[0] = 'sa'
+            elif data_CI[0].lower() == 'extranjero':
+                data_CI[0] = 'ex'
+            elif data_CI[0].lower() == 'ninguno':
+                data_CI[0] = 'nu'
+            else:
+                return "False"
+            data_CI[0] = data_CI[0].upper()
+            data_CI = data_CI[0] + '-' + data_CI[1]
+            req_Client = mysql.session.query(Cliente, Persona.nombre, Persona.apellido_Paterno, Persona.apellido_Materno, Persona.CI).filter(Cliente.id_Persona == Persona.ID, Persona.CI == data_CI).first()
+            if req_Client is None:
+                return "False"
         id_Cliente = req_Client.Cliente.ID
         id_Empleado = getData('em_id')
         id_Sucursal = mysql.session.query(Sucursal, Empleado.ID, Empleado.id_Sucursal).filter(Empleado.ID == id_Empleado, Empleado.id_Sucursal == Sucursal.ID).first().Sucursal.ID
@@ -761,6 +798,7 @@ def req_post_venta():
             res_inventario = Inventario.query.filter_by(id_Sucursal = id_Sucursal, id_Producto = id_Product).first()
             res_inventario.cantidad = req_maxAmount - req_amount
             mysql.session.add(new_ProductoVendido)
+            mysql.session.commit()
         for i in data_products[1]:
             req_Products = Producto.query.filter(Producto.nombre == i['name']).first()
             id_Product = req_Products.ID
@@ -773,6 +811,8 @@ def req_post_venta():
             mysql.session.add(new_Garantia)
         if tiene_Fac:
             NIT = request.form['rsl-pr-sNIT_field']
+            if NIT == '':
+                NIT = 0
             raz_Soc = request.form['rsl-pr-sRSocial_field']
             new_Factura = Factura(NIT, raz_Soc, id_Venta)
             mysql.session.add(new_Factura)

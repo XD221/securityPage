@@ -20,8 +20,9 @@
             <div id="cl-register" class="col s12">
                 <h5 class='col s7 offset-s3 card-title blue-text' style="margin-top: 25px; margin-bottom: 20px;" >Registrar Nuevo Cliente</h5>
                 <div class="row">
-                    <form id='nc-form' class="col s12" method="POST" action="/request/cliente" >
+                    <form id='rcl-form' class="col s12" method="POST" action="/request/cliente" >
                         <div class="row">
+                            <p id='rcl-message' class='red-text col offset-s1' ></p>
                             <h6 class='col s11 offset-s1'>Información Personal</h6>
                             <div class="input-field col s3 offset-s1">
                                 <input placeholder="Ninguno" id="ci_field" name='ci_field' type="number" class="inp validate white-text blue accent-2" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" min="0" maxlength="14" required >
@@ -83,13 +84,13 @@
                                 <input placeholder="Ninguno" id="rSocial_field" name='rSocial_field' type="text" class="inp validate white-text blue accent-2" pattern="[A-Za-z]{3,}" maxlength="45" >
                                 <label for="rSocial_field">Razon Social</label>
                             </div>
-                            <button id='nc-submit' class="col s9 offset-s1 btn grey lighten-2 light-blue-text" type="submit" name="action" style="margin-top: 20px;" >CONFIRM</button>
+                            <button id='nc-submit' class="col s9 offset-s1 btn grey lighten-2 light-blue-text" type="button" name="action" style="margin-top: 20px;" >CONFIRM</button>
                         </div>
                     </form>
                 </div>
             </div>
             <div id="cl-show" class="col s12">
-                <div id='rsl-main-container'>
+                <div id='bsl-main-container'>
                     <h5 class='col s7 offset-s4 card-title blue-text' style="margin-top: 25px; margin-bottom: 20px;" >Buscar Cliente</h5>
                     <div class="input-field col s6 offset-s1">
                         <input placeholder="Ninguno" id="bcl-pCI_field" name='bcl-pCI_field' type="number" class="inp validate white-text blue accent-2" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" min="0" maxlength="9" required >
@@ -152,7 +153,71 @@
                     </table>
                 </div>
             </div>
-            <div id="cl-modify" class="col s12">Modificar</div>
+            <div id="cl-modify" class="col s12">
+                <h5 class='col s7 offset-s3 card-title blue-text' style="margin-top: 25px; margin-bottom: 20px;" >Modificar Cliente</h5>
+                <div class="row">
+                    <div class="input-field col s6 offset-s1">
+                        <input placeholder="Ninguno" id="mcl-pCI_field" name='mcl-pCI_field' type="number" class="inp validate white-text blue accent-2" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" min="0" maxlength="9" required >
+                        <label for="mcl-pCI_field">CI</label>
+                    </div>
+                    <div class="input-field col s4">
+                        <select id='mcl-dd-dt' required >
+                          <option value="pa">Pando</option>
+                          <option value="be">Beni</option>
+                          <option value="lp">La Paz</option>
+                          <option value="or">Oruro</option>
+                          <option value="po">Potosí</option>
+                          <option value="ta">Tarija</option>
+                          <option value="ch">Chuquisaca</option>
+                          <option value="co">Cochabamba</option>
+                          <option value="sa">Santa Cruz</option>
+                          <option value="ex">Extranjero</option>
+                        </select>
+                        <label>Departamento</label>
+                    </div>
+                    <div class="input-field col s10 offset-s1">
+                        <input placeholder="Ninguno" id="mcl-pNameC_field" name='mcl-pNameC_field' type="text" class="inp validate white-text blue accent-2" pattern="[A-Za-z]{3,}" maxlength="16" required >
+                        <label for="mcl-pNameC_field">Nombre Completo</label>
+                    </div>
+                    <button id='mcl-cl-btn' class="col s8 offset-s2 btn grey lighten-2 light-blue-text" type="button" name="mcl-cl-btn" style="margin-top: 18px; margin-bottom: 50px;" >Buscar</button>
+                    <table id="mcl-tClient" class="col s10 offset-s1 striped" style="margin-bottom: 30px;">
+                        <thead>
+                          <tr>
+                            <th class='col s3 center-align' style='font-size: 0.6vw;' >CI</th>
+                            <th class='col s5 center-align' style='font-size: 0.6vw;' >Nombre Completo</th>
+                            <th class='col s4 center-align' style='font-size: 0.6vw;' >Departamento</th>
+                          </tr>
+                        </thead>
+                    
+                        <tbody>
+                          <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                          </tr>
+                          <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                          </tr>
+                          <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                          </tr>
+                        </tbody>
+                    </table>
+                    <div class="input-field col s5 offset-s1">
+                        <input placeholder="Ninguno" id="mcl-nit_field" name='mcl-nit_field' type="number" class="inp validate white-text blue accent-2" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" min="0" maxlength="16" disabled >
+                        <label for="mcl-nit_field">NIT</label>
+                    </div>
+                    <div class="input-field col s5">
+                        <input placeholder="Ninguno" id="mcl-rSocial_field" name='mcl-rSocial_field' type="text" class="inp validate white-text blue accent-2" pattern="[A-Za-z]{3,}" maxlength="45" disabled >
+                        <label for="mcl-rSocial_field">Razon Social</label>
+                    </div>
+                    <button disabled id='mcl-cl-btnModify' class="col s8 offset-s2 btn grey lighten-2 light-blue-text" type="button" name="mcl-cl-btn" style="margin-top: 18px; margin-bottom: 50px;" >Modificar</button>
+                </div>
+            </div>
             <div id="cl-delete" class="col s12">Eliminar</div>
         </div>
     </div>

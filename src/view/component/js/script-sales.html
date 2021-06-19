@@ -512,6 +512,12 @@
             $('#rsl-errMessage').text('Es obligatorio seleccionar a un cliente');
             return;
         }
+        if ($('#rsl-pr-sNIT_field').val() == '' && $('#rsl-bill-check').prop('checked')){
+            $('#rsl-second-container').hide('slow');
+            $('#rsl-main-container').show(600);
+            $('#rsl-errMessage').text('Es obligatorio Ingresar un NIT si va a pedir factura');
+            return;
+        }
         if ($vry_table == 3 && $blnk_table){
             $('#rsl-second-container').hide('slow');
             $('#rsl-main-container').show(600);
@@ -671,6 +677,10 @@
             $('#rsl-errMessage').text('Es obligatorio seleccionar a un cliente');
             return;
         }
+        if ($('#rsl-pr-sNIT_field').val() == '' && $('#rsl-bill-check').prop('checked')){
+            $('#rsl-errMessage').text('Es obligatorio Ingresar un NIT si va a pedir factura');
+            return;
+        }
         if ($vry_table == 3 && $blnk_table){
             $('#rsl-errMessage').text('No se agregaron productos a la venta');
             return;
@@ -680,5 +690,8 @@
         $('#rsl-main-container').hide('slow');
         $('#rsl-second-container').show(1100);
     });
-    
+    $('#btn_addClient_Anonymous').click(function(){
+        $('#rsl-sClient_field').val('Anonimo');
+        $('#add_Client').modal('close');
+    });
 </script>

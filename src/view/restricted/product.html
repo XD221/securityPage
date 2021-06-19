@@ -9,46 +9,46 @@
             <nav class="col s12 nav-extended transparent">
                 <div class="nav-content">
                     <ul class="tabs tabs-transparent">
-                        <li class="tab"><a class="active" href="#pr-register">Register</a></li>
-                        <li class="tab"><a  href="#pr-show">Show</a></li>
-                        <li class="tab disabled"><a href="#pr-modify">Modify</a></li>
-                        <li class="tab"><a href="#pr-delete">Delete</a></li>
+                        <li class="tab"><a class="active" href="#pr-register">Registrar</a></li>
+                        <li class="tab"><a  href="#pr-show">Buscar</a></li>
+                        <li class="tab disabled"><a href="#pr-modify">Modificar</a></li>
+                        <li class="tab"><a href="#pr-delete">Eliminar</a></li>
                     </ul>
                 </div>
             </nav>
 
             <div id="pr-register" class="col s12">
-                <h5 class='col s7 offset-s4 card-title blue-text' style="margin-top: 25px; margin-bottom: 20px;" >Register Product</h5>
+                <h5 class='col s7 offset-s4 card-title blue-text' style="margin-top: 25px; margin-bottom: 20px;" >Registrar Producto</h5>
                 <div class="row">
                     <form id='nc-form' class="col s12" method="POST" action="/request/producto" >
                         <div class="row">
                             <div class="input-field col s9 offset-s1">
-                                <input placeholder="None" id="name_field" name='name_field' type="text" class="inp validate white-text blue accent-2" pattern="[A-Za-z]{3,}" maxlength="50" required >
-                                <label for="name_field">Name</label>
+                                <input placeholder="Ninguno" id="name_field" name='name_field' type="text" class="inp validate white-text blue accent-2" pattern="[A-Za-z]{3,}" maxlength="50" required >
+                                <label for="name_field">Nombre</label>
                             </div>
                             <div class="input-field col s9 offset-s1">
                                 <textarea id="description_field" name='description_field' class="materialize-textarea" maxlength="253" pattern="[A-Za-z]{4,}" required ></textarea>
-                                <label for="description_field">Description</label>
+                                <label for="description_field">Descripcion</label>
                             </div>
                             <div class="input-field col s9 offset-s1">
-                                <input readonly placeholder="None" id="brand_field" name='brand_field' type="text" class="inp validate white-text blue accent-2" pattern="[A-Za-z]+" maxlength="40" required >
-                                <label for="name_field">Brand</label>
+                                <input readonly placeholder="Ninguno" id="brand_field" name='brand_field' type="text" class="inp validate white-text blue accent-2" pattern="[A-Za-z]+" maxlength="40" required >
+                                <label for="name_field">Marca</label>
                             </div>
                             <a id="register-Product_AddBrand" class="col s2" style="padding: 0 !important;" ><i class="inp material-icons black-text waves-effect waves-light modal-trigger" style="margin-top: 25px !important;" >add_circle</i></a>
                             <div id="add_Brand" class="modal modal-fixed-footer" >
                                 <div class="modal-content">
-                                    <h4 class="center-align" style="margin-bottom: 20px;" >Select Brand</h4>
+                                    <h4 class="center-align" style="margin-bottom: 20px;" >Seleccionar Marca</h4>
                                     <p id='rpr-br-errMessage' class='col s11 offset-s1  red-text' ></p>
                                     <div class="input-field col s9 offset-s1">
-                                        <input placeholder="None" id="rpr-br-sName_field" type="text" class="inp validate white-text blue accent-2" maxlength="16" >
-                                        <label for="rpr-br-sName_field">Search Name</label>
+                                        <input placeholder="Ninguno" id="rpr-br-sName_field" type="text" class="inp validate white-text blue accent-2" maxlength="16" >
+                                        <label for="rpr-br-sName_field">Buscar Nombre</label>
                                     </div>
-                                    <button id='rpr-br-btn' class="btn grey lighten-2 light-blue-text" type="button" name="rpr-br-btn" style="margin-top: 10px;" >Search</button>
+                                    <button id='rpr-br-btn' class="btn grey lighten-2 light-blue-text" type="button" name="rpr-br-btn" style="margin-top: 10px;" >Buscar</button>
                                     <table id='rpr-brandTable' class='col s8 offset-s1' >
                                         <thead>
                                             <tr>
-                                                <th class='col s9' >Name</th>
-                                                <th class='col s3'  >Action</th>
+                                                <th class='col s9' >Nombre</th>
+                                                <th class='col s3'  >Accion</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -56,40 +56,40 @@
                                                 {% for brand in dataBrand %}
                                                 <tr>
                                                     <td class="col s9" ><span id="brand_{{brand.ID}}" >{{brand.nombre}}</span></td>
-                                                    <td class="col s3" ><input id="btnBrand_{{brand.ID}}" class="col s12 btnBrandSelect" type="button" value="Select" ></td>
+                                                    <td class="col s3" ><input id="btnBrand_{{brand.ID}}" class="col s12 btnBrandSelect" type="button" value="Seleccionar" ></td>
                                                 </tr>
                                                 {% endfor %}
                                                 <tr>
                                                     <td class="col s9" ></td>
-                                                    <td class="col s3" ><input id="btnBrand_Unselect" class="col s12" type="button" value="Unselect" ></td>
+                                                    <td class="col s3" ><input id="btnBrand_Unselect" class="col s12" type="button" value="Deseleccionar" ></td>
                                                 </tr>
                                             {% endif %}
                                         </tbody>
                                     </table >
                                     <div class='col s12 center-align' style="padding-bottom: 30px;" >
-                                        <button id='rpr-brand-previous' class="col s3 offset-s1 btn grey lighten-2 light-blue-text" type="button" style="margin-top: 20px;" >PREVIOUS</button>
-                                        <button id='rpr-brand-next' class="col s3 offset-s1 btn grey lighten-2 light-blue-text" type="button" style="margin-top: 20px;" >NEXT</button>
+                                        <button id='rpr-brand-previous' class="col s3 offset-s1 btn grey lighten-2 light-blue-text" type="button" style="margin-top: 20px;" >Antes</button>
+                                        <button id='rpr-brand-next' class="col s3 offset-s1 btn grey lighten-2 light-blue-text" type="button" style="margin-top: 20px;" >Despues</button>
                                     </div>
                                 </div>
                                 <div class="modal-footer">
-                                    <a id='btn_Brand_NewBrand' href="" class="modal-action modal-close waves-effect waves-green btn-flat" >New Brand</a>
-                                    <a id='btn_Brand_Cancel' href="#" class="modal-action modal-close waves-effect waves-green btn-flat" >Cancel</a>
+                                    <a id='btn_Brand_NewBrand' href="" class="modal-action modal-close waves-effect waves-green btn-flat" >Nueva Marca</a>
+                                    <a id='btn_Brand_Cancel' href="#" class="modal-action modal-close waves-effect waves-green btn-flat" >Cancelar</a>
                                 </div>
                             </div>
                             <div class="input-field col s9 offset-s1">
-                                <input readonly placeholder="None" id="technician_field" name='technician_field' type="text" class="inp validate white-text blue accent-2" pattern="[A-Za-z]+" maxlength="64" >
-                                <label for="technician_field">Technician</label>
+                                <input readonly placeholder="Ninguno" id="technician_field" name='technician_field' type="text" class="inp validate white-text blue accent-2" pattern="[A-Za-z]+" maxlength="64" >
+                                <label for="technician_field">Tecnico</label>
                             </div>
                             <a id="register-Product_AddTechnician" class='col s2' style="padding: 0 !important;" ><i class="inp material-icons black-text waves-effect waves-light modal-trigger" style="margin-top: 25px !important;" >add_circle</i></a>
                             <div id="add_Technician" class="modal modal-fixed-footer">
                                 <div class="modal-content">
-                                    <h4 class="center-align" >Select Technician</h4>
+                                    <h4 class="center-align" >Seleccionar Tecnico</h4>
                                     <table id='rpr-technicianTable' class='col s8 offset-s1' >
                                         <thead>
                                             <tr>
-                                                <th class='col s6' >Full Name</th>
-                                                <th class='col s3' >Phone Number</th>
-                                                <th class='col s3'  >Action</th>
+                                                <th class='col s6' >Nombre Completo</th>
+                                                <th class='col s3' >Telefono/Celular</th>
+                                                <th class='col s3'  >Accion</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -98,36 +98,36 @@
                                                     <tr>
                                                         <td class="col s6" ><span id="technician_fName_{{technician.Tecnico.ID}}" >{{technician.nombre}} {{technician.apellido_Paterno}} {{technician.apellido_Materno}}</span></td>
                                                         <td class="col s3" ><span id="technician_pNumber_{{technician.Tecnico.ID}}" >{{technician.telefono}}</span></td>
-                                                        <td class="col s3" ><input id="btnTechnician_{{technician.Tecnico.ID}}" class="col s12 btnTechnicianSelect" type="button" value="Select" ></td>
+                                                        <td class="col s3" ><input id="btnTechnician_{{technician.Tecnico.ID}}" class="col s12 btnTechnicianSelect" type="button" value="Seleccionar" ></td>
                                                     </tr>
                                                 {% endfor %}
                                                 <tr>
                                                     <td class="col s6" ></td>
                                                     <td class="col s3" ></td>
-                                                    <td class="col s3" ><input id="btnTechnician_Unselect" class="col s12" type="button" value="Unselect" ></td>
+                                                    <td class="col s3" ><input id="btnTechnician_Unselect" class="col s12" type="button" value="Deseleccionar" ></td>
                                                 </tr>
                                             {% endif %}
                                         </tbody>
                                     </table >
                                 </div>
                                 <div class="modal-footer">
-                                    <a id='btn_Technician_NewTechnician' href="#" class="modal-action modal-close waves-effect waves-green btn-flat" >New Technician</a>
-                                    <a id='btn_Technician_Cancel' href="#!" class="modal-action modal-close waves-effect waves-green btn-flat" >Cancel</a>
+                                    <a id='btn_Technician_NewTechnician' href="#" class="modal-action modal-close waves-effect waves-green btn-flat" >Nuevo Tecnico</a>
+                                    <a id='btn_Technician_Cancel' href="#!" class="modal-action modal-close waves-effect waves-green btn-flat" >Cancelar</a>
                                 </div>
                             </div>
                             <div class="input-field col s9 offset-s1">
-                                <input readonly placeholder="None" id="category_field" name='category_field' type="text" class="inp validate white-text blue accent-2" pattern="[A-Za-z]+" maxlength="42" required >
-                                <label for="technician_field">Category</label>
+                                <input readonly placeholder="Ninguno" id="category_field" name='category_field' type="text" class="inp validate white-text blue accent-2" pattern="[A-Za-z]+" maxlength="42" required >
+                                <label for="technician_field">Categoria</label>
                             </div>
                             <a id="register-Product_AddCategory" class='col s2' style="padding: 0 !important;" ><i class="inp material-icons black-text waves-effect waves-light modal-trigger" style="margin-top: 25px !important;" >add_circle</i></a>
                             <div id="add_Category" class="modal modal-fixed-footer">
                                 <div class="modal-content">
-                                    <h4 class="center-align" >Select Category</h4>
+                                    <h4 class="center-align" >Seleccionar Categoria</h4>
                                     <table id='rpr-technicianTable' class='col s8 offset-s1' >
                                         <thead>
                                             <tr>
-                                                <th class='col s6' >Name</th>
-                                                <th class='col s3'  >Action</th>
+                                                <th class='col s6' >Nombre</th>
+                                                <th class='col s3'  >Accion</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -135,40 +135,40 @@
                                                 {% for category in dataCategory %}
                                                     <tr>
                                                         <td class="col s6" ><span id="category_{{category.ID}}" >{{category.nombre}}</span></td>
-                                                        <td class="col s3" ><input id="btnCategory_{{category.ID}}" class="col s12 btnCategorySelect" type="button" value="Select" ></td>
+                                                        <td class="col s3" ><input id="btnCategory_{{category.ID}}" class="col s12 btnCategorySelect" type="button" value="Seleccionar" ></td>
                                                     </tr>
                                                 {% endfor %}
                                                 <tr>
                                                     <td class="col s6" ></td>
                                                     <td class="col s3" ></td>
-                                                    <td class="col s3" ><input id="btnCategory_Unselect" class="col s12" type="button" value="Unselect" ></td>
+                                                    <td class="col s3" ><input id="btnCategory_Unselect" class="col s12" type="button" value="Deseleccionar" ></td>
                                                 </tr>
                                             {% endif %}
                                         </tbody>
                                     </table >
                                 </div>
                                 <div class="modal-footer">
-                                    <a id='btn_Category_NewCategory' href="#" class="modal-action modal-close waves-effect waves-green btn-flat" >New Category</a>
-                                    <a id='btn_Category_Cancel' href="#!" class="modal-action modal-close waves-effect waves-green btn-flat" >Cancel</a>
+                                    <a id='btn_Category_NewCategory' href="#" class="modal-action modal-close waves-effect waves-green btn-flat" >Nueva Categoria</a>
+                                    <a id='btn_Category_Cancel' href="#!" class="modal-action modal-close waves-effect waves-green btn-flat" >Cancelar</a>
                                 </div>
                             </div>
                             <div class="input-field col s9 offset-s1">
-                                <input placeholder="None" id="pwb_field" name='pwb_field' type="number" class="inp validate white-text blue accent-2" step="any" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" min="0" maxlength="9" required >
-                                <label for="pwb_field">Price with bill</label>
+                                <input placeholder="Ninguno" id="pwb_field" name='pwb_field' type="number" class="inp validate white-text blue accent-2" step="any" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" min="0" maxlength="9" required >
+                                <label for="pwb_field">Precio factura</label>
                             </div>
                             <div class="input-field col s9 offset-s1">
-                                <input placeholder="None" id="pwob_field" name='pwob_field' type="number" class="inp validate white-text blue accent-2" step="any" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" min="0" maxlength="9" required >
-                                <label for="pwob_field">Price without bill</label>
+                                <input placeholder="Ninguno" id="pwob_field" name='pwob_field' type="number" class="inp validate white-text blue accent-2" step="any" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" min="0" maxlength="9" required >
+                                <label for="pwob_field">Precio sin factura</label>
                             </div>
                             <div class="input-field col s9 offset-s1">
-                                <input placeholder="None" id="tp_field" name='tpr_field' type="number" class="inp validate white-text blue accent-2" step="any" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" min="0" maxlength="9" required >
-                                <label for="tp_field">Technical Price</label>
+                                <input placeholder="Ninguno" id="tp_field" name='tpr_field' type="number" class="inp validate white-text blue accent-2" step="any" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" min="0" maxlength="9" required >
+                                <label for="tp_field">Precio Tecnico</label>
                             </div>
                             <div class="input-field col s9 offset-s1">
-                                <input placeholder="None" id="gt_field" name='gt_field' type="number" class="inp validate white-text blue accent-2" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" min="0" maxlength="3" value="0" required >
-                                <label for="tp_field">Valid Time Month</label>
+                                <input placeholder="Ninguno" id="gt_field" name='gt_field' type="number" class="inp validate white-text blue accent-2" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" min="0" maxlength="3" value="0" required >
+                                <label for="tp_field">Meses Validos (Garantia)</label>
                             </div>
-                            <button id='rpr-submit' class="col s9 offset-s1 btn grey lighten-2 light-blue-text" type="submit" name="action" style="margin-top: 20px;" >CONFIRM</button>
+                            <button id='rpr-submit' class="col s9 offset-s1 btn grey lighten-2 light-blue-text" type="submit" name="action" style="margin-top: 20px;" >Confirmar</button>
                         </div>
                     </form>
                 </div>
