@@ -293,6 +293,22 @@ def req_get_empleado_select(number):
     res_empleado = Empleado.query.get(number)
     return empleado_schema_single.jsonify(res_empleado)
 
+@app.route('/request/empleado_var', methods=['GET'])
+def req_get_empleado_var():
+    if(isLogging()):
+        req_id = request.args.get('id')
+        if req_id is None:
+            return []
+        else:
+            if str.isdigit(req_id) == False:
+                return []
+            req_id = int(req_id)
+        req_data = mysql.session.query(Empleado.ID, Empleado.id_Sucursal, Empleado.id_Persona, Persona, Sucursal).filter(Empleado.id_Persona == Persona.ID, Empleado.id_Sucursal ==  Sucursal.ID, Empleado.ID.like(req_id)).first()
+        result = { "empleado_nombre": req_data.Persona.nombre, "empleado_ap_paterno": req_data.Persona.apellido_Paterno, "empleado_ap_materno": req_data.Persona.apellido_Materno, "empleado_sucursal_actual": req_data.Sucursal.nombre }
+        return result
+    else:
+        return redirect("/login", code=302)
+
 @app.route('/request/empleado', methods=['POST'])
 def req_post_empleado():
     try:
@@ -721,6 +737,35 @@ def req_get_venta_select(number):
     res_venta = Venta.query.get(number)
     return venta_schema_single.jsonify(res_venta)
 
+@app.route('/request/venta_var', methods=['GET'])
+def req_get_venta_var():
+    if isLogging():
+        req_branch = request.args.get('branch')
+        if req_branch is None:
+                req_branch = '%%'
+        else:
+            req_branch = "%{}%".format(req_branch)
+
+        req_date = request.args.get('date')
+
+        if req_date is None:
+                req_date = '%%'
+        else:
+            if(req_date != ''):
+                req_date = datetime.strptime(req_date, '%d/%m/%Y')
+                req_date = req_date.strftime('%Y/%m/%d')   
+            req_date = "%{}%".format(req_date)
+
+        req_data = mysql.session.query(Sucursal, Venta, Cliente.ID, Cliente.id_Persona, Persona).filter(Sucursal.ID == Venta.id_Sucursal, Venta.id_Cliente == Cliente.ID, Cliente.id_Persona == Persona.ID, Venta.fecha_Venta.like(req_date), Sucursal.nombre.like(req_branch), Venta.estado == 0).order_by(Venta.fecha_Venta.desc()).limit(10).all()
+        result = []
+        for venta in req_data:
+            date_V = venta.Venta.fecha_Venta.strftime('%Y/%m/%d')
+            content = {'ID': venta.Venta.ID, 'fecha': date_V, 'total': str(venta.Venta.total), 'factura': venta.Venta.tiene_Factura, 'cliente_ci': venta.Persona.CI, 'cliente_nombre': venta.Persona.nombre, 'cliente_ap_paterno': venta.Persona.apellido_Paterno, 'cliente_ap_materno': venta.Persona.apellido_Materno, 'id_empleado': venta.Venta.id_Empleado, 'sucursal': venta.Sucursal.nombre, 'id_venta': venta.Venta.ID }
+            result.append(content)
+        return jsonify(result)
+    else:
+        return redirect("/login", code=302)
+
 @app.route('/request/venta', methods=['POST'])
 def req_post_venta():
     try:
@@ -851,6 +896,25 @@ def req_get_Producto_vendido_select(idproducto, idventa):
     res_Producto_vendido = Producto_vendido.query.get((idproducto, idventa))
     return producto_vendido_schema_single.jsonify(res_Producto_vendido)
 
+@app.route('/request/Producto_vendido_var', methods=['GET'])
+def req_get_Producto_vendido_var():
+    if isLogging():
+        req_idSale = request.args.get('id_sale')
+        if req_idSale is None:
+            return []
+        req_idSale = int(req_idSale)
+        req_data = mysql.session.query(Producto_vendido, Producto, Venta.ID).filter(Producto_vendido.id_Producto == Venta.ID, Producto_vendido.id_Producto == Producto.ID, Venta.ID == req_idSale).all()
+        result = []
+        for prsold in req_data:
+            content = {'nombre_producto': prsold.Producto.nombre, 'precioU': str(prsold.Producto_vendido.precio_Unitario), 'cantidad': str(prsold.Producto_vendido.cantidad), 'total': str(prsold.Producto_vendido.total) }
+            result.append(content)
+        return jsonify(result)
+    else:
+        return redirect("/login", code=302)
+        
+        
+    
+    
 @app.route('/request/Producto_vendido', methods=['POST'])
 def req_post_Producto_vendido():
     try:
@@ -987,6 +1051,21 @@ def req_get_invetario_select(number):
     res_invetario = Inventario.query.get(number)
     return inventario_schema_single.jsonify(res_invetario)
 
+@app.route('/request/inventario_var', methods=['GET'])
+def req_get_inventario_var():
+    if isLogging():
+        req_idBranch = request.args.get('id_branch')
+        if req_idBranch is None:
+            return []
+        req_data = mysql.session.query(Inventario, Producto, Sucursal).filter(Inventario.id_Producto == Producto.ID, Inventario.id_Sucursal == Sucursal.ID, Sucursal.ID == req_idBranch).all()
+        result = []
+        for inventario in req_data:
+            content = { 'cantidad': str(inventario.Inventario.cantidad), 'producto_nombre': inventario.Producto.nombre, 'id_sucursal': str(inventario.Sucursal.ID), 'id_producto': inventario.Producto.ID }
+            result.append(content)
+        return jsonify(result)
+    else:
+        return redirect("/login", code=302)
+
 @app.route('/request/inventario', methods=['POST'])
 def req_post_invetario():
     try:
@@ -1122,5 +1201,8 @@ def req_post_factura():
         return "False"
 
 #----------------------------------------------
+
+#Extra
+
 
 #----------------------------------------------

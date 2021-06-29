@@ -91,6 +91,92 @@
         }
         return false
     }
+
+    function loadlist_Brand(data){
+        $('#rsl-pr-sBrand_field').empty();
+        $('#rsl-pr-sBrand_field').append(
+                $('<option>').attr('value', '').text('Sin seleccionar')
+            );
+        $.each(data, function (index, value) { 
+            $('#rsl-pr-sBrand_field').append(
+                $('<option>').attr('value', value.nombre).text(value.nombre)
+            );
+        });
+    }
+
+    function loadlist_Category(data){
+        $('#rsl-pr-sCategory_field').empty();
+        $('#rsl-pr-sCategory_field').append(
+                $('<option>').attr('value', '').text('Sin seleccionar')
+            );
+        $.each(data, function(index, value){
+            $('#rsl-pr-sCategory_field').append(
+                $('<option>').attr('value', value.nombre).text(value.nombre)
+            );
+        });
+    }
+
+    function loadList_branch(data){
+        $('#csl-branch').empty();
+        $.each(data, function(index, value){    
+            $('#csl-branch').append(
+                $('<option>').attr('value', value.nombre).text(value.nombre)
+            );
+        });
+    }
+
+    function loadRow_cProductSolds(data){
+        $('#csl-productSold > tbody').empty();
+        $.each(data, function(index, value){
+            $('#csl-productSold > tbody').append(
+                $('<tr>').append(
+                    $('<td>').attr('class', 'col s4 center-align').append(
+                        $('<span>').attr('id', 'prSold-name_' + value['id_Venta'] + '_' + value['id_Producto']).attr('class', 'col s12').text(value['nombre_producto'])
+                    )
+                ).append(
+                    $('<td>').attr('class', 'col s2 center-align').append(
+                        $('<span>').attr('id', 'prSold-amount_' + value['id_Venta'] + '_' + value['id_Producto']).attr('class', 'col s12').text(value['cantidad'])
+                    )
+                ).append(
+                    $('<td>').attr('class', 'col s3 center-align').append(
+                        $('<span>').attr('id', 'prSold-price_' + value['id_Venta'] + '_' + value['id_Producto']).attr('class', 'col s12').text(value['precioU'])
+                    )
+                ).append(
+                    $('<td>').attr('class', 'col s3 center-align').append(
+                        $('<span>').attr('id', 'prSold-total_' + value['id_Venta'] + '_' + value['id_Producto']).attr('class', 'col s12').text(value['total'])
+                    )
+                )
+            );
+        });
+    }
+
+    function loadRow_cSales(data){
+        var cn_rw = 0;
+        $('#csl-SalesTable > tbody').empty();
+        $.each(data, function(index, value){
+            $('#csl-SalesTable > tbody').append(
+                $('<tr>').append(
+                    $('<td>').attr('class', 'col s3 center-align').append(
+                        $('<span>').attr('id', 'sale-date_' + value['ID']).text(value['fecha']))
+                ).append(
+                    $('<td>').attr('class', 'col s4 center-align').append(
+                        $('<span>').attr('id', 'sale-cl_' + value['ID']).attr('class', 'col s12').text(value['cliente_nombre'] + ' ' + value['cliente_ap_paterno'] + ' ' + value['cliente_ap_materno'] )
+                    )
+                ).append(
+                    $('<td>').attr('class', 'col s3 center-align').append(
+                        $('<span>').attr('id', 'sale-br_' + value['ID']).attr('class', 'col s12').text(value['sucursal'])
+                    )
+                ).append(
+                    $('<td>').attr('class', 'col s2 center-align').append(
+                        $('<input>').attr('id', 'sale-desc_' + value['ID']).attr('class', 'col s12 modal-trigger sale-detail').attr('type', 'button').attr('value', 'Ver')
+                        .attr('at_bill', value['factura']).attr('at_cl-ci', value['cliente_ci']).attr('at_cl-name', value['cliente_nombre'])
+                        .attr('at_cl-fsurn', value['cliente_ap_paterno']).attr('at_cl-msurn', value['cliente_ap_materno']).attr('at_id_empl', value['id_empleado'])
+                        .attr('at_total', value['total']).attr('at_idSale', value['id_venta'])
+                    )
+                )
+            );
+        });
+    }
     function loadRow_client(data){
         $cn_fb = 0
         $('#rsl-ClientTable > tbody').empty();
@@ -227,6 +313,28 @@
     });
 
     $('#rsl-addProduct').click(function(){
+        $.ajax({
+            url: '/request/categoria',
+            data: '',
+            type: 'GET',
+            success: function(data){
+                loadlist_Category(data);
+            },
+            error: function (error){
+                $('#rsl-errMessage').text('Error 500.2');
+            }
+        });
+        $.ajax({
+            url: '/request/marca',
+            data: '',
+            type: 'GET',
+            success: function(data){
+                loadlist_Brand(data);
+            },
+            error: function (error){
+                $('#rsl-errMessage').text('Error 500.2');
+            }
+        });
         $('#add_Product').modal('open');
     });
 
@@ -439,10 +547,10 @@
                         $('<span>').attr('class', 'col s12 rsl-addProduct-price').attr('id', 'rsl-product-price_' + $this_current.attr('id').substr(11)).attr('p_cf', $('#product-price_' + $this_current.attr('id').substr(11)).attr('p_cf')).attr('p_sf', $('#product-price_' + $this_current.attr('id').substr(11)).attr('p_sf')).attr('p_t', $('#product-price_' + $this_current.attr('id').substr(11)).attr('p_t')))
                 ).append(
                     $('<td>').attr('class', 'col s2 center-align').append(
-                        $('<input>').attr('class', 'col s12 rsl-prAmount').attr('type', 'number').attr('id', 'rsl-product-amount_' + $this_current.attr('id').substr(11)).attr('value', 1)).attr('oninput', 'javascript: if (parseInt(this.value) > parseInt(this.maxLength)) this.value = this.maxLength;').attr('maxLength', $amount_temp)
+                        $('<input>').attr('class', 'col s12 rsl-prAmount').attr('type', 'number').attr('id', 'rsl-product-amount_' + $this_current.attr('id').substr(11)).attr('value', 1).attr('oninput', 'javascript: if (parseInt(this.value) > parseInt(this.maxLength)) this.value = this.maxLength;').attr('maxLength', $amount_temp))
                 ).append(
                     $('<td>').attr('class', 'col s2 center-align').append(
-                        $('<input>').attr('class', 'col s12 rsl-btn-deleteSelectProduct').attr('type', 'button').attr('id', 'rsl-btnProduct-delete_' + $this_current.attr('id').substr(11)).attr('value', 'Delete'))
+                        $('<input>').attr('class', 'col s12 rsl-btn-deleteSelectProduct').attr('type', 'button').attr('id', 'rsl-btnProduct-delete_' + $this_current.attr('id').substr(11)).attr('value', 'Eliminar'))
                 )
             );
         }
@@ -694,4 +802,83 @@
         $('#rsl-sClient_field').val('Anonimo');
         $('#add_Client').modal('close');
     });
+    $('#csl-search').click(function(){
+        $.ajax({
+            url: '/request/venta_var?branch=' + $('#csl-branch').val() + '&date=' + $('#csl_dBirth_field').val(),
+            data: '',
+            type: 'GET',
+            success: function(data){
+                loadRow_cSales(data);
+            },
+            error: function (error){
+                $('#csl-errMessage').text('Error 500.1');
+            }
+        });
+    });
+    $("body").on("click", ".sale-detail", function(){
+        $.ajax({
+            url: '/request/empleado_var?id=' + $(this).attr('at_id_empl'),
+            data: '',
+            type: 'GET',
+            success: function(data){
+                $("#csl-detail-em-name").text("Nombre: " + data['empleado_nombre']);
+                $("#csl-detail-em-fsurn").text("Apellido Paterno: " + data['empleado_ap_paterno']);
+                $("#csl-detail-em-msurn").text("Apellido Materno: " + data['empleado_ap_materno']);
+                $("#csl-detail-em-branch-crr").text("Sucursal: " + data['empleado_sucursal_actual']);
+            },
+            error: function (error){
+                $('#csl-dt-errMessage').text('Error 500.2');
+            }
+        });
+        if($(this).attr("at_bill") == 0){
+            $("#csl-detail-bill").text('Factura:' + 'No Tiene');
+        }else{
+            $("#csl-detail-bill").text('Factura: ' + 'Tiene');
+        }
+        $("#csl-total").text("Total: " + $(this).attr('at_total'));
+        $var_fsurname = '';
+        $var_msurname = '';
+        if($.trim($(this).attr('at_cl-fsurn')) == ""){
+            $var_fsurname = "Ninguno";
+        }else{
+            $var_fsurname = $(this).attr('at_cl-fsurn');
+        }
+        if($.trim($(this).attr('at_cl-msurn')) == ""){
+            $var_msurname = "Ninguno";
+            $("#csl-detail-cl-msurn").text("Apellido Materno: " + "Ninguno");
+        }else{
+            $var_msurname = $(this).attr('at_cl-msurn');
+        }
+        $("#csl-detail-cl-ci").text("CI: " + $(this).attr('at_cl-ci'));
+        $("#csl-detail-cl-name").text("Nombre: " + $(this).attr('at_cl-name'));
+        $("#csl-detail-cl-fsurn").text("Apellido Paterno: " + $var_fsurname);
+        $("#csl-detail-cl-msurn").text("Apellido Materno: " + $var_msurname);
+        $.ajax({
+            url: '/request/Producto_vendido_var?id_sale=' + $(this).attr('at_idSale'),
+            data: '',
+            type: 'GET',
+            success: function(data){
+                loadRow_cProductSolds(data);    
+            },
+            error: function (error){
+                $('#csl-errMessage').text('Error 500.2');
+            }
+        });
+        $('#crl-detail').modal('open');
+    });
+
+    $('#srSl-tab').click(function(){
+        $.ajax({
+            url: '/request/sucursal',
+            data: '',
+            type: 'GET',
+            success: function(data){
+                loadList_branch(data);
+            },
+            error: function (error){
+                $('#srIn-errMessage').text('Error 500.2');
+            }
+        });
+    });
+
 </script>

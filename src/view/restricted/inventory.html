@@ -1,19 +1,79 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset='UTF-8'>
-        <meta name='viewport' content='width=device-width, initial-scale=0'>
-    </head>
-    <body>
-        <div id="Container-registerInventory" class='container row valign-wrapper' style='width: 90%;' >
-            <div class='col s12 card-panel' >
-                <h5 class='col s7 offset-s4 card-title blue-text' style="margin-top: 25px; margin-bottom: 20px;" >Register Iventory</h5>
+{% extends "layout.html" %}
+{% block title %}Home{% endblock %}
+{% block head %}
+    {% include "component/css/css-inventory.html" %}
+{% endblock %}
+{% block content %}
+    <div id="Container-Sales" class='container row valign-wrapper' style="width: 100%;" >
+        <div class='col s12 card-panel' style='width: 90%; padding: 0;' >
+            <nav class="col s12 nav-extended transparent">
+                <div class="nav-content">
+                    <ul class="tabs tabs-transparent">
+                        <li class="tab"><a id='addIn-tab' class="active" href="#in-register">Agregar</a></li>
+                        <li class="tab"><a id='srIn-tab' href="#in-show">Buscar por sucursal</a></li>
+                        <li class="tab disabled"><a href="#in-modify">Alterar</a></li>
+                        <li class="tab disabled"><a href="#in-delete">Eliminar</a></li>
+                    </ul>
+                </div>
+            </nav>
+            <div id="in-register" class="col s12">
+                <h5 class='col s7 offset-s3 card-title blue-text' style="margin-top: 25px; margin-bottom: 20px;" >Agregar nuevo producto al Inventario</h5>
+                <p id='addIn-errMessage' class='col s11 offset-s1  red-text' ></p>
                 <div class="row">
+                    <div class="col s5 offset-s1" style="margin-top: 12px;" >
+                        <label for="addIn-sBrand" class="" >Marca</label>
+                        <select id='addIn-sBrand' class="browser-default" >
+                        </select>
+                    </div>
+                    <div class="col s5" style="margin-top: 12px;" >
+                        <label for="addIn_sCategory" class="" >Categoria</label>
+                        <select id='addIn_sCategory' class="browser-default" >
+                        </select>
+                    </div>
+                    <div class="input-field col s5 offset-s1" >
+                        <input placeholder="Ninguno" id="addIn-sName" name='rsl-pr-sName_field' type="text" class="inp validate white-text blue accent-2" maxlength="52" >
+                        <label for="addIn-sName">Nombre</label>
+                    </div>
+                    <button id='addIn-search' class="col s5 btn grey lighten-2 light-blue-text" type="button" name="action" style="margin-top: 20px; margin-bottom: 20px; line-height: 30px; " >Buscar</button>
+                    <table id='addIn_ProductTable' class='col s10 offset-s1' >
+                        <thead>
+                            <tr>
+                                <th class='col s4 center-align' >Nombre</th>
+                                <th class='col s4 center-align' >Marca</th>
+                                <th class='col s4 center-align' >Cantegoria</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
                 </div>
             </div>
+            <div id="in-show" class="col s12">
+                <h5 class='col s7 offset-s4 card-title blue-text' style="margin-top: 25px; margin-bottom: 20px;" >Buscar Inventario</h5>
+                <p id='srIn-errMessage' class='col s11 offset-s1  red-text' ></p>
+                <div class="col s6 offset-s1" style="margin-bottom: 40px;" >
+                    <label for="srIn-branch" class="col s12" >Sucursal</label>
+                    <select id='srIn-branch' class="browser-default" >
+                    </select>
+                </div>
+                <button id='srIn-search' class="col s4 btn grey lighten-2 light-blue-text" type="button" name="action" style="margin-top: 20px; margin-bottom: 20px; line-height: 30px; " >Buscar</button>
+                <table id="srIn-tbinventory" class="col s10 offset-s1 striped" style="margin-bottom: 30px;">
+                    <thead>
+                      <tr>
+                        <th class='col s6 center-align' style='font-size: 1vw;' >Nombre</th>
+                        <th class='col s6 center-align' style='font-size: 1vw;' >Cantidad</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                        
+                    </tbody>
+                </table>
+            </div>
+            <div id="in-modify" class="col s12">Modify</div>
+            <div id="in-delete" class="col s12">Delete</div>
         </div>
-    </body>
-    <footer>
-
-    </footer>
-</html>
+    </div>
+{% endblock %}
+{% block footer %}
+    {% include "component/js/script-inventory.html" %}
+{% endblock %}

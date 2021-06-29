@@ -36,9 +36,7 @@ def sales():
     return render_template('restricted/sales.html')
 
 def inventory():
-    global sess_global
-    idSucursal = sess_global('sucursal_id')
-    return render_template('restricted/inventory.html', sucursal_code = idSucursal)
+    return render_template('restricted/inventory.html')
 
 def product():
     get_Brand = getData('data_Brand')

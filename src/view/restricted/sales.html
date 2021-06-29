@@ -9,8 +9,8 @@
             <nav class="col s12 nav-extended transparent">
                 <div class="nav-content">
                     <ul class="tabs tabs-transparent">
-                        <li class="tab"><a class="active" href="#sl-register">Registrar</a></li>
-                        <li class="tab"><a  href="#sl-show">Buscar</a></li>
+                        <li class="tab"><a  class="active" href="#sl-register">Registrar</a></li>
+                        <li class="tab"><a id="srSl-tab" href="#sl-show">Buscar por sucursal</a></li>
                         <li class="tab disabled"><a href="#sl-modify">Modificar</a></li>
                         <li class="tab"><a href="#sl-delete">Eliminar</a></li>
                     </ul>
@@ -150,21 +150,24 @@
                                         <p id='sl-pr-errMessage' class='col s11 offset-s1  red-text' ></p>
                                         <div class="input-field col s4 offset-s1" >
                                             <input placeholder="Ninguno" id="rsl-pr-sName_field" name='rsl-pr-sName_field' type="text" class="inp validate white-text blue accent-2" maxlength="52" >
-                                            <label for="sl-pr-sName_field">Buscar Nombre</label>
+                                            <label for="sl-pr-sName_field">Nombre</label>
                                         </div>
-                                        <div class="input-field col s6 " >
-                                            <input placeholder="Ninguno" id="rsl-pr-sBrand_field" type="text" class="inp validate white-text blue accent-2" maxlength="42" >
-                                            <label for="sl-pr-sName_field">Buscar Marca</label>
+                                        <div class="col s4" style="margin-top: 12px;" >
+                                            <label for="rsl-pr-sBrand_field" class="" >Marca</label>
+                                            <select id='rsl-pr-sBrand_field' class="browser-default" >
+                                            </select>
                                         </div>
-                                        <div class="input-field col s5 offset-s1" >
-                                            <input placeholder="Ninguno" id="rsl-pr-sCategory_field" type="text" class="inp validate white-text blue accent-2" maxlength="42" >
-                                            <label for="sl-pr-sName_field">Buscar Categoria</label>
+                                        <div class="col s12"></div>
+                                        <div class="col s4 offset-s1" style="margin-top: 12px;" >
+                                            <label for="rsl-pr-sCategory_field" class="" >Categoria</label>
+                                            <select id='rsl-pr-sCategory_field' class="browser-default" >
+                                            </select>
                                         </div>
-                                        <button id='rsl-pr-btn' class="col s3 btn grey lighten-2 light-blue-text" type="button" name="rpr-br-btn" style="margin-top: 40px; margin-bottom: 50px;" >Buscar</button>
+                                        <button id='rsl-pr-btn' class="col s3 btn grey lighten-2 light-blue-text" type="button" name="rpr-br-btn" style="margin-top: 35px; margin-bottom: 50px;" >Buscar</button>
                                         <table id='rsl-ProductTable' class='col s12' >
                                             <thead>
                                                 <tr>
-                                                    <th class='col s3 center-align' >nombre</th>
+                                                    <th class='col s3 center-align' >Nombre</th>
                                                     <th class='col s1 center-align' >Precio Unitario</th>
                                                     <th class='col s1 center-align' >Cantidad</th>
                                                     <th class='col s1 center-align' >Garantía</th>
@@ -200,14 +203,71 @@
                               <th class='col s3 center-align' >Fecha de Vencimiento</th>
                           </tr>
                         </thead>
-
                         <tbody>
                         </tbody>
                     </table>
                     <button id='rsl-submit' class="col s8 offset-s2 btn grey lighten-2 light-blue-text" type="button" name="action" style="margin-top: 20px; margin-bottom: 30px;  line-height: 30px; " >Registrar</button>
                 </div>
             </div>
-            <div id="sl-show" class="col s12">Show</div>
+            <div id="sl-show" class="col s12">
+                <p id='csl-errMessage' class='col s11 offset-s1  red-text' ></p>
+                <div class="col s5 offset-s1" style="margin-top: 22px;" >
+                    <label for="csl-branch" class="col s12" >Sucursal</label>
+                    <select id='csl-branch' class="browser-default" >
+                    </select>
+                </div>
+                <div class="input-field col s5">
+                    <input placeholder="Ninguno" id="csl_dBirth_field" name="dBirth_field" type="date" class="inp validate white-text blue accent-2 datepicker" >
+                    <label for="dBirth_field">Fecha</label>
+                </div>
+                <button id='csl-search' class="col s8 offset-s2 btn grey lighten-2 light-blue-text" type="button" name="action" style="margin-top: 20px; margin-bottom: 20px; line-height: 30px; " >Buscar</button>
+                <table id='csl-SalesTable' class='col s10 offset-s1' style="margin-bottom: 50px;"  >
+                    <thead>
+                        <th class='col s3 center-align' style='font-size: 11px;' >Fecha</th>
+                        <th class='col s4 center-align' style='font-size: 11px;' >Cliente</th>
+                        <th class='col s3 center-align' style='font-size: 11px;' >Sucursal</th>
+                        <th class='col s2 center-align' style='font-size: 11px;' >Detalle</th>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+                <div id="crl-detail" class="modal modal-fixed-footer">
+                    <div class="modal-content">
+                        <h4 class="center-align" style="margin-bottom: 20px;" >Detalle</h4>
+                        <p id='csl-dt-errMessage' class='col s11 offset-s1  red-text' ></p>
+                        <p id="csl-total" ></p>
+                        <p id="csl-detail-bill" ></p>
+                        <div class="divider"></div>
+                        <h5>Cliente</h5>
+                        <p id="csl-detail-cl-ci" ></p>
+                        <p id="csl-detail-cl-name" ></p>
+                        <p id="csl-detail-cl-fsurn" ></p>
+                        <p id="csl-detail-cl-msurn" ></p>
+                        <div class="divider"></div>
+                        <h5>Empleado</h5>
+                        <p id="csl-detail-em-name" ></p>
+                        <p id="csl-detail-em-fsurn" ></p>
+                        <p id="csl-detail-em-msurn" ></p>
+                        <p id="csl-detail-em-branch-crr" ></p>
+                        <div class="divider"></div>
+                        <h5>Productos Vendidos</h5>
+                        <table id='csl-productSold' class='col s10 offset-s1' style="margin-bottom: 50px; margin-top: 50px;"  >
+                            <thead>
+                                <th class='col s4 center-align' style='font-size: 11px;' >Nombre</th>
+                                <th class='col s2 center-align' style='font-size: 11px;' >Cantidad</th>
+                                <th class='col s3 center-align' style='font-size: 11px;' >Precio Unitario</th>
+                                <th class='col s3 center-align' style='font-size: 11px;' >Total</th>
+                            </thead>
+                            <tbody>
+
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <a id='csl_btnSales_Cancel' href="#" class="modal-action modal-close waves-effect waves-green btn-flat">Cancelar</a>
+                    </div>
+                </div>
+            </div>
             <div id="sl-modify" class="col s12">Modify</div>
             <div id="sl-delete" class="col s12">Delete</div>
         </div>

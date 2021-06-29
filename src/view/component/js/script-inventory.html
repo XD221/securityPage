@@ -1,0 +1,97 @@
+<script type='text/javascript'>
+    $.ajax({
+        url: '/request/categoria',
+        data: '',
+        type: 'GET',
+        success: function(data){
+            loadlist_Category(data);
+        },
+        error: function (error){
+            $('#addIn-errMessage').text('Error 500.1');
+        }
+    });
+    $.ajax({
+        url: '/request/marca',
+        data: '',
+        type: 'GET',
+        success: function(data){
+            loadlist_Brand(data);
+        },
+        error: function (error){
+            $('#addIn-errMessage').text('Error 500.2');
+        }
+    });
+    $('#srIn-tab').click(function(){
+        $.ajax({
+        url: '/request/sucursal',
+        data: '',
+        type: 'GET',
+        success: function(data){
+            $.each(data, function(index, value){
+                $('#srIn-branch').append(
+                    $('<option>').attr('value', value.ID).text(value.nombre)
+                );
+            });
+        },
+        error: function (error){
+            $('#srIn-errMessage').text('Error 500.2');
+        }
+    });
+    });
+
+    function loadRow_Inventory(data){
+        $('#srIn-tbinventory > tbody').empty();
+        $.each(data, function(index, value){
+            $('#srIn-tbinventory').append(
+                $('<tr>').append(
+                    $('<td>').attr('class', 'col s6 center-align').append(
+                        $('<span>').attr('id', 'srIn-name_' + value['id_sucursal'] + '_' + value['id_producto']).text(value['producto_nombre'])
+                    )
+                ).append(
+                    $('<td>').attr('class', 'col s6 center-align').append(
+                        $('<span>').attr('id', 'srIn-amount_' + value['id_sucursal'] + '_' + value['id_producto']).text(value['cantidad'])
+                    )
+                )
+            )
+        });
+    }
+
+    function loadlist_Brand(data){
+        $('#addIn-sBrand').empty();
+        $('#addIn-sBrand').append(
+                $('<option>').attr('value', '').text('Sin seleccionar')
+            );
+        $.each(data, function (index, value) { 
+            $('#addIn-sBrand').append(
+                $('<option>').attr('value', value.ID).text(value.nombre)
+            );
+        });
+    }
+
+    function loadlist_Category(data){
+        $('addIn_sCategory').empty();
+        $('#addIn_sCategory').append(
+                $('<option>').attr('value', '').text('Sin seleccionar')
+            );
+        $.each(data, function(index, value){
+            $('#addIn_sCategory').append(
+                $('<option>').attr('value', value.ID).text(value.nombre)
+            );
+        });
+    }
+
+    $('#srIn-search').click(function(){
+        $.ajax({
+            url: '/request/inventario_var?id_branch=' + $('#srIn-branch').val(),
+            data: '',
+            type: 'GET',
+            success: function(data){
+                loadRow_Inventory(data);
+            },
+            error: function (error){
+                $('#srSl-errMessage').text('Error 500.2');
+            }
+        });
+    });
+    
+</script>
